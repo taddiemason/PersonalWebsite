@@ -2,38 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zach's Interactive Terminal</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       background-color: black;
       color: #00FF00;
       font-family: monospace;
       margin: 0;
+      padding: 0;
       height: 100vh;
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     .terminal {
       background: black;
       border: 2px solid #00FF00;
-      padding: 20px;
-      width: 800px;
-      max-width: 90%;
-      height: 500px;
+      padding: 16px;
+      width: 100%;
+      max-width: 800px;
+      height: 100%;
+      max-height: 90vh;
       display: flex;
       flex-direction: column;
       overflow-y: auto;
       box-shadow: 0 0 20px #00FF00;
     }
+
     .line {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
     }
+
     .prompt {
       margin-right: 5px;
+      white-space: nowrap;
     }
+
     input {
       background: black;
       color: #00FF00;
@@ -41,15 +53,30 @@
       font-family: monospace;
       font-size: 1em;
       outline: none;
-      width: 100%;
+      flex: 1;
+      min-width: 0;
     }
+
     .output {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       white-space: pre-wrap;
+      word-break: break-word;
     }
+
     a {
       color: #00FF00;
       text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .terminal {
+        padding: 12px;
+        font-size: 0.9em;
+      }
+
+      input {
+        font-size: 1em;
+      }
     }
   </style>
 </head>
