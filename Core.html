@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Zach's Interactive Terminal</title>
   <style>
     * {
@@ -36,6 +36,8 @@
       margin: auto;
       background-color: black;
       -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      overscroll-behavior: contain;
     }
 
     .line {
@@ -58,6 +60,7 @@
       outline: none;
       flex: 1;
       min-width: 0;
+      caret-color: #00FF00;
     }
 
     .output {
@@ -69,6 +72,19 @@
     a {
       color: #00FF00;
       text-decoration: underline;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.2em;
+      background-color: #00FF00;
+      margin-left: 2px;
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
     }
 
     @media (max-width: 600px) {
@@ -98,8 +114,8 @@
     const terminal = document.getElementById('terminal');
     const commandInput = document.getElementById('commandInput');
     const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+    const TYPING_SPEED = 5; // Lower = faster
 
-    // Device-specific tweaks
     if (isMobile) {
       console.log("Mobile detected");
       commandInput.setAttribute("autocapitalize", "off");
@@ -114,13 +130,24 @@
       });
     }
 
+    // Ensure input focuses after user interacts (fix for some mobile browsers)
+    document.body.addEventListener('click', () => {
+      commandInput.focus();
+    }, { once: true });
+
     const welcomeMessage = `I'm Zach LaLime, a Network & IT Specialist passionate about building & maintaining secure, scalable systems. I love working with AWS, Azure, Cisco, and Linux.`;
 
     const commands = {
       help: `Available commands:\n- about\n- contact\n- resume\n- clear`,
       about: `I am currently enrolled at Erie Community College, studying for my CCNA, and will graduate with my AAS in Information Technology and a Network Support Technology Certificate in the spring of 2025. Following graduation, I plan to pursue a bachelor’s degree in computer science to continue building upon my knowledge in the field. Concurrently, I have been actively engaged in the IT industry, where I have had the opportunity to apply my studies. This experience has allowed me to further develop my skills and proficiency in the field of IT. Prior to making a career change to Information Technology, I spent four years as a Field Sales Representative for DSI Systems Inc. During my tenure, I developed strong leadership abilities, established strategic decision-making skills, and contributed to achieving company objectives in collaborative environments. My combination of academic pursuit in computer science and prior experience in business management has helped me cultivate a skill set that I am excited to bring to my next professional endeavor.`,
       contact: `You can reach me here:\n- Zacharylalime@gmail.com\n- (716) 341-3678`,
-      resume: `Resume:\n\nEDUCATION:\n- Erie Community College, Buffalo, NY\n  Currently enrolled in Information Technology, Network Support Technology Certificate\n  Studying for CCNA\n  Expected graduation: Spring 2025\n  Future goal: Bachelor's degree in Computer Science\n\nPROFESSIONAL SUMMARY:\n- Actively engaged in IT industry applying studies in real-world environments\n- Four years experience as a Field Sales Representative at DSI Systems Inc\n- Strong leadership, strategic decision-making, collaborative teamwork\n\nSKILLS:\n• Hardware Installation\n• System performance optimization\n• Azure AD\n• Server Maintenance\n• Data Recovery\n• Office 365\n• Network Security\n• Software Updating\n• Active Directory\n• Software Configuration\n• Problem Solving\n• Network Troubleshooting\n• Customer Service\n• Network Maintenance\n• Server Troubleshooting\n• Hardware Configuration\n\nEXPERIENCE:\nVITEC SOLUTIONS – IT Technician (11/2023 - 6/2024)\n- Provided technical support via phone/email tickets\n- Set up complex computer networks\n- Supported clients with hardware/software configuration\n- Assisted end-users with logon, printing, network, application issues\n- Evaluated sites for hardware/software needs\n- Maintained accurate documentation\n- Installed software patches\n- Monitored and improved network performance\n- Managed robust data backups\n- Configured firewalls, routers, switches\n\nNIACOM INC – MDU Specialist (07/2022 - 03/2023)\n- Sold telecommunications products to multi-family segments\n- Formulated market strategies\n- Managed contract approvals\n- Collaborated with network, legal, product, field, marketing, finance\n- Managed sales team efforts\n- Expanded business development channels\n\nDSI SYSTEMS INC – Field Sales Representative (05/2018 - 07/2022)\n- Acquired new business for AT&T Wireless Retail Program\n- Built relationships with third-party labor companies\n- Provided onsite coaching/training to sales teams\n- Supported retailer program goals\n- Awarded Field Salesperson of the Year for Northeast Region (2018)\n\nAT&T MOBILITY – Retail Sales Consultant (10/2015 - 05/2018, 05/2023 - 11/2023)\n- Tailored solutions for cellular and in-home needs\n- Recognized for delivering "Our Promise"\n- Achieved customer service excellence\n- Liaison between AT&T and DSI\n- Awarded Certificate of Excellence (August 2017)`
+      resume: `Resume:\n\nEDUCATION:\n- Erie Community College, Buffalo, NY\n  Currently enrolled in Information Technology, Network Support Technology Certificate\n  Studying for CCNA\n  Expected graduation: Spring 2025\n  Future goal: Bachelor's degree in Computer Science\n\nPROFESSIONAL SUMMARY:\n- Actively engaged in IT industry applying studies in real-world environments\n- Four years experience as a Field Sales Representative at DSI Systems Inc\n- Strong leadership, strategic decision-making, collaborative teamwork\n\nSKILLS:\n• Hardware Installation\n• System performance optimization\n• Azure AD\n• Server Maintenance\n• Data Recovery\n• Office 365\n• Network Security\n• Software Updating\n• Active Directory\n• Software Configuration\n• Problem Solving\n• Network Troubleshooting\n• Customer Service\n• Network Maintenance\n• Server Troubleshooting\n• Hardware Configuration\n\nEXPERIENCE:\nVITEC SOLUTIONS – IT Technician (11/2023 - 6/2024)\n- Provided technical support via phone/email tickets\n- Set up complex computer networks\n- Supported clients with hardware/software configuration\n- Assisted end-users with logon, printing, network, application issues\n- Evaluated sites for hardware/software needs\n- Maintained accurate documentation\n- Installed software patches\n- Monitored and improved network performance\n- Managed robust data backups\n- Configured firewalls, routers, switches\n\nNIACOM INC – MDU Specialist (07/2022 - 03/2023)\n- Sold telecommunications products to multi-family segments\n- Formulated market strategies\n- Managed contract approvals\n- Collaborated with network, legal, product, field, marketing, finance\n- Managed sales team efforts\n- Expanded business development channels\n\nDSI SYSTEMS INC – Field Sales Representative (05/2018 - 07/2022)\n- Acquired new business for AT&T Wireless Retail Program\n- Built relationships with third-party labor companies\n- Provided onsite coaching/training to sales teams\n- Supported retailer program goals\n- Awarded Field Salesperson of the Year for Northeast Region (2018)\n\nAT&T MOBILITY – Retail Sales Consultant (10/2015 - 05/2018, 05/2023 - 11/2023)\n- Tailored solutions for cellular and in-home needs\n- Recognized for delivering "Our Promise"\n- Achieved customer service excellence\n- Liaison between AT&T and DSI\n- Awarded Certificate of Excellence August 2017`
+    };
+
+    const alias = {
+      cv: 'resume',
+      bio: 'about',
+      mail: 'contact'
     };
 
     let history = [];
@@ -165,6 +192,7 @@
     }
 
     function processCommand(cmd) {
+      cmd = alias[cmd] || cmd;
       if (cmd === 'clear') {
         clearTerminal();
       } else if (commands[cmd]) {
@@ -193,7 +221,7 @@
         } else {
           clearInterval(interval);
         }
-      }, 10);
+      }, TYPING_SPEED);
     }
 
     function fakeLoading(callback) {
