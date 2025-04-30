@@ -1,7 +1,7 @@
 name = "zach-terminal"
 type = "javascript"
 
-account_id = "your_account_id_here"
+account_id = "35a31bc865872c0376603e2f60a8bfb5"
 workers_dev = true
 compatibility_date = "2025-04-30"
 
