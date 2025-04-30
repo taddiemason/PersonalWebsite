@@ -97,6 +97,22 @@
   <script>
     const terminal = document.getElementById('terminal');
     const commandInput = document.getElementById('commandInput');
+    const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+    // Device-specific tweaks
+    if (isMobile) {
+      console.log("Mobile detected");
+      commandInput.setAttribute("autocapitalize", "off");
+      commandInput.setAttribute("autocorrect", "off");
+    } else {
+      console.log("Desktop detected");
+      window.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key === 'k') {
+          e.preventDefault();
+          commandInput.focus();
+        }
+      });
+    }
 
     const welcomeMessage = `I'm Zach LaLime, a Network & IT Specialist passionate about building & maintaining secure, scalable systems. I love working with AWS, Azure, Cisco, and Linux.`;
 
@@ -112,7 +128,7 @@
 
     commandInput.addEventListener('keydown', function(event) {
       if (event.key === 'Enter') {
-        event.preventDefault(); // Fixes mobile double-submit bug
+        event.preventDefault();
         const input = commandInput.value.trim();
         if (input) {
           addCommandLine(input);
@@ -190,7 +206,7 @@
       setTimeout(() => {
         loadingDiv.remove();
         callback();
-      }, 400);
+      }, isMobile ? 300 : 400);
     }
 
     function clearTerminal() {
