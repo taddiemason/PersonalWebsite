@@ -1,13 +1,3 @@
 name = "zach-terminal"
-type = "javascript"
-
-account_id = "35a31bc865872c0376603e2f60a8bfb5"
-workers_dev = true
+main = "worker.js"
 compatibility_date = "2025-04-30"
-
-[site]
-bucket = "./dist"
-entry-point = "."
-
-[build]
-command = "echo Static deployment — no build needed"
