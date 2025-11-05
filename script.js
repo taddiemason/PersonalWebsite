@@ -6,19 +6,25 @@
 // ====== CONSTANTS ======
 const CONFIG = {
   // Timing constants (in milliseconds)
-  BOOT_LINE_DELAY: 100,
-  LOADING_DELAY: 400,
+  BOOT_LINE_DELAY: 80,
+  LOADING_DELAY: 300,
   TYPING_SPEED: 2,
 
-  // Colors (matched with CSS variables)
-  PRIMARY_COLOR: '#00FF00',
-  BACKGROUND_COLOR: 'black',
+  // Colors (matched with CSS variables - Kali theme)
+  PRIMARY_COLOR: '#4AF626',
+  SECONDARY_COLOR: '#00D9FF',
+  BACKGROUND_COLOR: '#0A0E14',
+
+  // Prompt configuration
+  USERNAME: 'zach',
+  HOSTNAME: 'zachbox',
+  PATH: '~',
 
   // Messages
-  WELCOME_MESSAGE: "I'm Zach LaLime, a Network & IT Specialist passionate about building & maintaining secure, scalable systems.",
-  HELP_PROMPT: 'Type <b>help</b> to get started.',
-  COMMAND_NOT_FOUND: 'Command not found: ',
-  LOADING_TEXT: 'Loading...',
+  WELCOME_MESSAGE: 'Welcome to ZachBox Terminal v1.0',
+  HELP_PROMPT: 'Type <b>help</b> to view available commands.',
+  COMMAND_NOT_FOUND: 'bash: ',
+  LOADING_TEXT: 'Processing...',
 };
 
 // ====== BOOT SEQUENCE GENERATOR ======
@@ -118,31 +124,38 @@ function generatePciLines() {
 }
 
 /**
- * Generate terminal startup sequence
+ * Generate terminal startup sequence - Kali style
  */
 function generateTerminalStartup() {
   return [
-    "[    0.180000] Starting Zach's Terminal Environment...",
-    "[    0.182000] Mounting /proc",
-    "[    0.184000] Mounting /sys",
-    "[    0.186000] Starting udev daemon",
-    "[    0.188000] Setting hostname to zach-terminal",
-    "[    0.190000] Loading kernel modules...",
-    "[    0.192000] Setting up loopback interface",
-    "[    0.194000] Bringing up network interfaces",
-    "[    0.196000] Checking disk filesystem... clean",
-    "[    0.197000] Starting SSH daemon... done",
-    "[    0.197500] Launching display manager... done",
-    "[    0.198000] Terminal environment initialized successfully",
-    "[    0.199000] Enabling user shell access",
-    "[    0.200000] Launching shell...",
-    "[    0.202000] Welcome, Zach. Type `help` to view available commands.",
+    "[    0.180000] Starting ZachBox System...",
+    "[    0.182000] Mounting /proc filesystem",
+    "[    0.184000] Mounting /sys filesystem",
+    "[    0.186000] Starting systemd-udevd",
+    "[    0.188000] Setting hostname to zachbox",
+    "[    0.190000] Loading security modules...",
+    "[    0.192000] Configuring network interfaces",
+    "[    0.194000] Starting NetworkManager",
+    "[    0.196000] Filesystem check complete: clean, 245692/1310720 files, 3457123/5242880 blocks",
+    "[    0.197000] Starting OpenSSH server... [ OK ]",
+    "[    0.197500] Starting PostgreSQL database... [ OK ]",
+    "[    0.198000] System initialization complete",
+    "[    0.199000] ZachBox Terminal v1.0 ready",
+    "[    0.200000] Starting bash shell...",
+    "[    0.202000] Type 'help' to view available commands.",
   ];
 }
 
 // ====== COMMAND DEFINITIONS ======
 const commands = {
-  help: `Available commands:\n- about\n- contact\n- resume\n- clear`,
+  help: `Available commands:
+  about    - Display information about Zach
+  contact  - Show contact information
+  resume   - View professional experience and education
+  clear    - Clear the terminal screen
+  whoami   - Display current user`,
+
+  whoami: `zach`,
 
   about: `I'm currently working as a Network Administrator at Synchronet while pursuing a degree in Cyber Security at SUNY Canton University. I recently completed my AAS in Information Technology and earned a Network Support Technology Certificate from Erie Community College. Throughout my academic journey, I've been actively engaged in the IT field, applying classroom knowledge to real-world scenarios and continuing to strengthen my technical skills. Prior to transitioning into tech, I spent four years as a Field Sales Representative at DSI Systems Inc., where I developed strong leadership, decision-making, and collaboration skills. With a blend of academic training, hands-on IT experience, and a solid foundation in business, I've built a well-rounded skill set that I'm eager to contribute to future opportunities in the field.`,
 
@@ -406,7 +419,10 @@ function navigateHistory(direction) {
 function addCommandLine(input) {
   const line = document.createElement('div');
   line.className = 'line';
-  line.innerHTML = `<span class="prompt">$</span> ${escapeHtml(input)}`;
+  const promptHtml = `<span class="prompt">
+    <span class="username">${CONFIG.USERNAME}</span><span class="at">@</span><span class="hostname">${CONFIG.HOSTNAME}</span><span class="separator">:</span><span class="path">${CONFIG.PATH}</span><span class="dollar">$</span>
+  </span>`;
+  line.innerHTML = promptHtml + ' ' + escapeHtml(input);
   terminal.insertBefore(line, commandInput.parentNode);
   scrollToBottom();
 }
@@ -432,7 +448,7 @@ function processCommand(cmd) {
     });
   } else {
     fakeLoading(() => {
-      typeOutput(CONFIG.COMMAND_NOT_FOUND + escapeHtml(cmd));
+      typeOutput(CONFIG.COMMAND_NOT_FOUND + escapeHtml(cmd) + ': command not found');
     });
   }
 }

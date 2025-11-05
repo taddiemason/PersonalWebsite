@@ -3,13 +3,18 @@
  * A retro terminal-style personal website
  */
 
-/* CSS Variables for easy theming */
+/* CSS Variables for easy theming - Kali Linux inspired */
 :root {
-  --primary-color: #00FF00;
-  --background-color: black;
+  --primary-color: #4AF626;
+  --secondary-color: #00D9FF;
+  --prompt-color: #FF0000;
+  --username-color: #4AF626;
+  --hostname-color: #4AF626;
+  --path-color: #00D9FF;
+  --background-color: #0A0E14;
   --font-family: 'Courier New', Courier, monospace;
   --border-width: 2px;
-  --glow-size: 20px;
+  --glow-size: 15px;
   --base-font-size: 16px;
   --terminal-padding: 20px;
   --terminal-max-width: none;
@@ -57,8 +62,8 @@ body {
   display: flex;
   flex-direction: column;
   padding: var(--terminal-padding);
-  border: var(--border-width) solid var(--primary-color);
-  box-shadow: 0 0 var(--glow-size) var(--primary-color);
+  border: var(--border-width) solid var(--secondary-color);
+  box-shadow: 0 0 var(--glow-size) rgba(0, 217, 255, 0.5);
   overflow-y: auto;
   overflow-x: hidden;
   max-width: var(--terminal-max-width);
@@ -102,6 +107,37 @@ body {
   margin-right: 5px;
   white-space: nowrap;
   flex-shrink: 0;
+  color: var(--prompt-color);
+  font-weight: bold;
+}
+
+/* Kali-style prompt components */
+.prompt .username {
+  color: var(--username-color);
+  font-weight: bold;
+}
+
+.prompt .at {
+  color: var(--primary-color);
+}
+
+.prompt .hostname {
+  color: var(--hostname-color);
+  font-weight: bold;
+}
+
+.prompt .separator {
+  color: var(--primary-color);
+}
+
+.prompt .path {
+  color: var(--path-color);
+  font-weight: bold;
+}
+
+.prompt .dollar {
+  color: var(--prompt-color);
+  font-weight: bold;
 }
 
 /* Input field styles */
@@ -141,8 +177,13 @@ input:focus {
 
 /* Link styles */
 a {
-  color: var(--primary-color);
+  color: var(--secondary-color);
   text-decoration: underline;
+}
+
+a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
 }
 
 /* Screen reader only content */
@@ -227,7 +268,7 @@ a {
   .terminal, #bootScreen {
     border-radius: 4px;
     /* Reduce glow on mobile for better battery life */
-    box-shadow: 0 0 8px var(--primary-color);
+    box-shadow: 0 0 8px rgba(0, 217, 255, 0.4);
   }
 
   .output {
@@ -277,7 +318,7 @@ a {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .terminal, #bootScreen {
     /* Reduce glow on high DPI for sharper appearance */
-    box-shadow: 0 0 calc(var(--glow-size) * 0.8) var(--primary-color);
+    box-shadow: 0 0 calc(var(--glow-size) * 0.8) rgba(0, 217, 255, 0.5);
   }
 }
 
@@ -296,10 +337,11 @@ a {
 
 /* Dark mode support (already dark, but good practice) */
 @media (prefers-color-scheme: light) {
-  /* Keep terminal dark even if user prefers light mode */
+  /* Keep terminal dark even if user prefers light mode - Kali theme */
   :root {
-    --primary-color: #00FF00;
-    --background-color: black;
+    --primary-color: #4AF626;
+    --secondary-color: #00D9FF;
+    --background-color: #0A0E14;
   }
 }
 
