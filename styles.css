@@ -7,9 +7,12 @@
 :root {
   --primary-color: #00FF00;
   --background-color: black;
-  --font-family: monospace;
+  --font-family: 'Courier New', Courier, monospace;
   --border-width: 2px;
   --glow-size: 20px;
+  --base-font-size: 16px;
+  --terminal-padding: 16px;
+  --terminal-max-width: 900px;
 }
 
 /* Reset and base styles */
@@ -17,18 +20,34 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: var(--base-font-size);
+  /* Prevent iOS text size adjustment */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 100%;
   font-family: var(--font-family);
   background-color: var(--background-color);
   color: var(--primary-color);
+  overflow-x: hidden;
 }
 
 body {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  /* Safe area for notched devices (iPhone X, etc.) */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 /* Terminal container styles */
@@ -36,19 +55,34 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: var(--terminal-padding);
   border: var(--border-width) solid var(--primary-color);
   box-shadow: 0 0 var(--glow-size) var(--primary-color);
   overflow-y: auto;
-  max-width: 800px;
+  overflow-x: hidden;
+  max-width: var(--terminal-max-width);
   width: 100%;
-  margin: auto;
+  margin: 16px auto;
   background-color: var(--background-color);
   -webkit-overflow-scrolling: touch;
+  /* Better text rendering on mobile */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent text selection issues on mobile */
+  user-select: text;
+  -webkit-user-select: text;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  /* Touch actions for better mobile interaction */
+  touch-action: pan-y pinch-zoom;
+  /* Momentum scrolling on iOS */
+  overscroll-behavior: contain;
 }
 
 #bootScreen {
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Command line styles */
@@ -56,11 +90,14 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  gap: 0;
+  width: 100%;
 }
 
 .prompt {
   margin-right: 5px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Input field styles */
@@ -73,6 +110,20 @@ input {
   outline: none;
   flex: 1;
   min-width: 0;
+  width: 100%;
+  padding: 2px 0;
+  /* Fix mobile input quirks */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  /* Prevent zoom on focus for iOS */
+  font-size: max(16px, 1em);
+}
+
+/* Prevent iOS zoom on focus */
+input:focus {
+  font-size: max(16px, 1em);
 }
 
 /* Output text styles */
@@ -80,6 +131,8 @@ input {
   margin-bottom: 12px;
   white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 /* Link styles */
@@ -101,15 +154,165 @@ a {
   border-width: 0;
 }
 
-/* Mobile responsive styles */
-@media (max-width: 600px) {
+/* ====== RESPONSIVE DESIGN ====== */
+
+/* Large desktop screens */
+@media (min-width: 1200px) {
+  :root {
+    --terminal-max-width: 1000px;
+    --base-font-size: 17px;
+  }
+}
+
+/* Standard desktop */
+@media (min-width: 992px) and (max-width: 1199px) {
+  :root {
+    --terminal-max-width: 900px;
+  }
+}
+
+/* Tablets and small laptops */
+@media (min-width: 768px) and (max-width: 991px) {
+  :root {
+    --terminal-max-width: 700px;
+    --terminal-padding: 14px;
+    --glow-size: 15px;
+  }
+
   .terminal, #bootScreen {
-    font-size: 0.9em;
-    padding: 12px;
-    height: auto;
+    margin: 12px auto;
+  }
+}
+
+/* Mobile landscape and large phones */
+@media (min-width: 576px) and (max-width: 767px) {
+  :root {
+    --terminal-max-width: 100%;
+    --terminal-padding: 12px;
+    --border-width: 1px;
+    --glow-size: 10px;
+    --base-font-size: 15px;
+  }
+
+  .terminal, #bootScreen {
+    margin: 8px;
+    border-radius: 4px;
+  }
+
+  .output {
+    margin-bottom: 10px;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 575px) {
+  :root {
+    --terminal-max-width: 100%;
+    --terminal-padding: 10px;
+    --border-width: 1px;
+    --glow-size: 8px;
+    --base-font-size: 14px;
+  }
+
+  body {
+    padding: 0;
+  }
+
+  .terminal, #bootScreen {
+    margin: 4px;
+    padding: 10px;
+    border-radius: 4px;
+    /* Reduce glow on mobile for better battery life */
+    box-shadow: 0 0 8px var(--primary-color);
+  }
+
+  .output {
+    margin-bottom: 8px;
+    font-size: 0.95em;
+  }
+
+  .prompt {
+    margin-right: 3px;
   }
 
   input {
-    font-size: 1em;
+    /* Ensure input doesn't cause zoom on mobile */
+    font-size: 16px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 375px) {
+  :root {
+    --terminal-padding: 8px;
+    --base-font-size: 13px;
+  }
+
+  .terminal, #bootScreen {
+    margin: 2px;
+    padding: 8px;
+  }
+
+  .output {
+    font-size: 0.9em;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .terminal, #bootScreen {
+    margin: 4px auto;
+    max-height: 90vh;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+}
+
+/* High DPI displays (Retina, etc) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .terminal, #bootScreen {
+    /* Reduce glow on high DPI for sharper appearance */
+    box-shadow: 0 0 calc(var(--glow-size) * 0.8) var(--primary-color);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .terminal, #bootScreen {
+    scroll-behavior: auto;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode support (already dark, but good practice) */
+@media (prefers-color-scheme: light) {
+  /* Keep terminal dark even if user prefers light mode */
+  :root {
+    --primary-color: #00FF00;
+    --background-color: black;
+  }
+}
+
+/* Print styles */
+@media print {
+  .terminal, #bootScreen {
+    border: 1px solid black;
+    box-shadow: none;
+    max-width: 100%;
+  }
+
+  input {
+    display: none;
+  }
+
+  .output {
+    page-break-inside: avoid;
   }
 }

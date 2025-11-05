@@ -294,13 +294,49 @@ function transitionToTerminal() {
  * Set up all event listeners for terminal interactions
  */
 function setupEventListeners() {
-  // Focus input on body click (once)
-  document.body.addEventListener('click', () => {
-    commandInput.focus();
-  }, { once: true });
+  // Focus input on body click/tap
+  document.body.addEventListener('click', focusInput);
+  document.body.addEventListener('touchstart', focusInput, { passive: true });
 
   // Handle keyboard input
   commandInput.addEventListener('keydown', handleKeyDown);
+
+  // Prevent double-tap zoom on mobile
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(event) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
+  // Handle window resize to adjust terminal
+  let resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      scrollToBottom();
+    }, 250);
+  });
+
+  // Better mobile keyboard handling
+  commandInput.addEventListener('blur', function() {
+    // Restore scroll position on mobile keyboard close
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      scrollToBottom();
+    }, 100);
+  });
+}
+
+/**
+ * Focus the command input
+ */
+function focusInput() {
+  if (terminal.style.display !== 'none') {
+    commandInput.focus();
+  }
 }
 
 /**
