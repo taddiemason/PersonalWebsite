@@ -11,8 +11,9 @@
   --border-width: 2px;
   --glow-size: 20px;
   --base-font-size: 16px;
-  --terminal-padding: 16px;
-  --terminal-max-width: 900px;
+  --terminal-padding: 20px;
+  --terminal-max-width: none;
+  --terminal-margin: 0;
 }
 
 /* Reset and base styles */
@@ -62,7 +63,8 @@ body {
   overflow-x: hidden;
   max-width: var(--terminal-max-width);
   width: 100%;
-  margin: 16px auto;
+  height: 100%;
+  margin: var(--terminal-margin);
   background-color: var(--background-color);
   -webkit-overflow-scrolling: touch;
   /* Better text rendering on mobile */
@@ -77,6 +79,8 @@ body {
   touch-action: pan-y pinch-zoom;
   /* Momentum scrolling on iOS */
   overscroll-behavior: contain;
+  /* Remove border radius for full-screen look */
+  border-radius: 0;
 }
 
 #bootScreen {
@@ -156,46 +160,47 @@ a {
 
 /* ====== RESPONSIVE DESIGN ====== */
 
-/* Large desktop screens */
+/* Large desktop screens - full width */
 @media (min-width: 1200px) {
   :root {
-    --terminal-max-width: 1000px;
+    --terminal-max-width: none;
     --base-font-size: 17px;
+    --terminal-padding: 24px;
+    --terminal-margin: 0;
   }
 }
 
-/* Standard desktop */
+/* Standard desktop - full width */
 @media (min-width: 992px) and (max-width: 1199px) {
   :root {
-    --terminal-max-width: 900px;
+    --terminal-max-width: none;
+    --terminal-padding: 20px;
+    --terminal-margin: 0;
   }
 }
 
 /* Tablets and small laptops */
 @media (min-width: 768px) and (max-width: 991px) {
   :root {
-    --terminal-max-width: 700px;
-    --terminal-padding: 14px;
+    --terminal-max-width: none;
+    --terminal-padding: 18px;
+    --terminal-margin: 0;
     --glow-size: 15px;
-  }
-
-  .terminal, #bootScreen {
-    margin: 12px auto;
   }
 }
 
 /* Mobile landscape and large phones */
 @media (min-width: 576px) and (max-width: 767px) {
   :root {
-    --terminal-max-width: 100%;
+    --terminal-max-width: none;
     --terminal-padding: 12px;
+    --terminal-margin: 8px;
     --border-width: 1px;
     --glow-size: 10px;
     --base-font-size: 15px;
   }
 
   .terminal, #bootScreen {
-    margin: 8px;
     border-radius: 4px;
   }
 
@@ -207,8 +212,9 @@ a {
 /* Mobile portrait */
 @media (max-width: 575px) {
   :root {
-    --terminal-max-width: 100%;
+    --terminal-max-width: none;
     --terminal-padding: 10px;
+    --terminal-margin: 4px;
     --border-width: 1px;
     --glow-size: 8px;
     --base-font-size: 14px;
@@ -219,8 +225,6 @@ a {
   }
 
   .terminal, #bootScreen {
-    margin: 4px;
-    padding: 10px;
     border-radius: 4px;
     /* Reduce glow on mobile for better battery life */
     box-shadow: 0 0 8px var(--primary-color);
@@ -245,12 +249,8 @@ a {
 @media (max-width: 375px) {
   :root {
     --terminal-padding: 8px;
+    --terminal-margin: 2px;
     --base-font-size: 13px;
-  }
-
-  .terminal, #bootScreen {
-    margin: 2px;
-    padding: 8px;
   }
 
   .output {
@@ -260,8 +260,11 @@ a {
 
 /* Landscape orientation on mobile */
 @media (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --terminal-margin: 4px;
+  }
+
   .terminal, #bootScreen {
-    margin: 4px auto;
     max-height: 90vh;
   }
 
