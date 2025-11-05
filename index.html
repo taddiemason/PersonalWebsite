@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary Meta Tags -->
+  <title>Zach LaLime - Network & IT Specialist | Interactive Terminal</title>
+  <meta name="title" content="Zach LaLime - Network & IT Specialist">
+  <meta name="description" content="Network Administrator and IT Specialist passionate about building secure, scalable systems. Explore my experience, skills, and contact information through an interactive terminal interface.">
+  <meta name="keywords" content="Network Administrator, IT Specialist, Cyber Security, Network Security, System Administrator, Zach LaLime">
+  <meta name="author" content="Zach LaLime">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zachlalime.com/">
+  <meta property="og:title" content="Zach LaLime - Network & IT Specialist">
+  <meta property="og:description" content="Network Administrator and IT Specialist passionate about building secure, scalable systems. Explore my experience through an interactive terminal interface.">
+  <meta property="og:image" content="https://zachlalime.com/preview.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://zachlalime.com/">
+  <meta property="twitter:title" content="Zach LaLime - Network & IT Specialist">
+  <meta property="twitter:description" content="Network Administrator and IT Specialist passionate about building secure, scalable systems.">
+  <meta property="twitter:image" content="https://zachlalime.com/preview.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#000000">
+</head>
+<body>
+  <!-- Boot Screen Section -->
+  <section id="bootScreen" role="region" aria-label="System boot sequence" aria-live="polite">
+    <pre id="bootOutput" aria-label="Boot sequence output"></pre>
+  </section>
+
+  <!-- Terminal Section -->
+  <main class="terminal" id="terminal" style="display: none;" role="main">
+    <div class="output" role="status" aria-live="polite">
+      I'm Zach LaLime, a Network & IT Specialist passionate about building & maintaining secure, scalable systems.
+    </div>
+    <div class="output" role="status">
+      Type <strong>help</strong> to get started.
+    </div>
+
+    <!-- Command Input Line -->
+    <div class="line" role="group" aria-label="Command input">
+      <span class="prompt" aria-hidden="true">$</span>
+      <label for="commandInput" class="sr-only">Enter terminal command</label>
+      <input
+        type="text"
+        id="commandInput"
+        autofocus
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-label="Terminal command input"
+        aria-describedby="terminalHelp"
+        placeholder="">
+    </div>
+
+    <!-- Screen Reader Helper Text -->
+    <div id="terminalHelp" class="sr-only">
+      Interactive terminal. Type 'help' for available commands. Use arrow keys to navigate command history. Press Tab for autocomplete.
+    </div>
+  </main>
+
+  <!-- Main Script -->
+  <script src="script.js"></script>
+</body>
+</html>
