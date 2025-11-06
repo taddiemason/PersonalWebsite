@@ -32,52 +32,67 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20251106-kali-authentic">
 
   <!-- Theme Color - Kali inspired -->
-  <meta name="theme-color" content="#0A0E14">
+  <meta name="theme-color" content="#1e1e2e">
 </head>
 <body>
   <!-- Boot Screen Section -->
-  <section id="bootScreen" role="region" aria-label="System boot sequence" aria-live="polite">
+  <section id="bootScreen" role="region" aria-label="System boot sequence" aria-live="polite" style="display: none;">
     <pre id="bootOutput" aria-label="Boot sequence output"></pre>
   </section>
 
   <!-- Terminal Section -->
   <main class="terminal" id="terminal" style="display: none;" role="main">
-    <div class="output" role="status" aria-live="polite">
-      Welcome to ZachBox Terminal v1.0
-    </div>
-    <div class="output" role="status">
-      Type <strong>help</strong> to view available commands.
-    </div>
-
-    <!-- Command Input Line -->
-    <div class="line" role="group" aria-label="Command input">
-      <span class="prompt" aria-hidden="true">
-        <span class="username">zach</span><span class="at">@</span><span class="hostname">zachbox</span><span class="separator">:</span><span class="path">~</span><span class="dollar">$</span>
-      </span>
-      <label for="commandInput" class="sr-only">Enter terminal command</label>
-      <input
-        type="text"
-        id="commandInput"
-        autofocus
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-        aria-label="Terminal command input"
-        aria-describedby="terminalHelp"
-        placeholder="">
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      <div class="terminal-buttons">
+        <button class="terminal-button btn-close" aria-label="Close"></button>
+        <button class="terminal-button btn-minimize" aria-label="Minimize"></button>
+        <button class="terminal-button btn-maximize" aria-label="Maximize"></button>
+      </div>
+      <div class="terminal-title">zach@zachbox: ~</div>
+      <div class="terminal-logo">KALI</div>
     </div>
 
-    <!-- Screen Reader Helper Text -->
-    <div id="terminalHelp" class="sr-only">
-      Interactive terminal. Type 'help' for available commands. Use arrow keys to navigate command history. Press Tab for autocomplete.
+    <!-- Terminal Body -->
+    <div class="terminal-body">
+      <div class="output" role="status" aria-live="polite">
+        <span class="info">Welcome to ZachBox Terminal v1.0</span>
+      </div>
+      <div class="output" role="status">
+        Type <span class="highlight">help</span> to view available commands.
+      </div>
+
+      <!-- Command Input Line with Kali-style fancy prompt -->
+      <div class="prompt-line prompt-line-top">
+        <span class="prompt-bracket">┌──(</span><span class="username">zach</span><span class="at-sign">@</span><span class="hostname">zachbox</span><span class="prompt-bracket">)-[</span><span class="path">~</span><span class="prompt-bracket">]</span>
+      </div>
+      <div class="prompt-line" role="group" aria-label="Command input">
+        <span class="prompt-bracket">└─</span><span class="prompt-symbol">$</span>
+        <label for="commandInput" class="sr-only">Enter terminal command</label>
+        <input
+          type="text"
+          id="commandInput"
+          autofocus
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Terminal command input"
+          aria-describedby="terminalHelp"
+          placeholder="">
+      </div>
+
+      <!-- Screen Reader Helper Text -->
+      <div id="terminalHelp" class="sr-only">
+        Interactive terminal. Type 'help' for available commands. Use arrow keys to navigate command history. Press Tab for autocomplete.
+      </div>
     </div>
   </main>
 
   <!-- Main Script -->
-  <script src="script.js"></script>
+  <script src="script.js?v=20251106-kali-authentic"></script>
 </body>
 </html>
