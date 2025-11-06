@@ -3,19 +3,28 @@
  * A retro terminal-style personal website
  */
 
-/* CSS Variables for easy theming - Kali Linux inspired */
+/* CSS Variables for easy theming - Authentic Kali Linux */
 :root {
-  --primary-color: #4AF626;
-  --secondary-color: #00D9FF;
-  --prompt-color: #FF0000;
-  --username-color: #4AF626;
-  --hostname-color: #4AF626;
-  --path-color: #00D9FF;
-  --background-color: #0A0E14;
+  --kali-purple: #7c3aed;
+  --kali-cyan: #00d9ff;
+  --kali-green: #10b981;
+  --kali-yellow: #fbbf24;
+  --kali-red: #ef4444;
+  --kali-bg-dark: #1e1e2e;
+  --kali-bg-darker: #1a1d29;
+  --kali-header-bg: #2d2d44;
+  --primary-color: #10b981;
+  --secondary-color: #00d9ff;
+  --prompt-color: #7c3aed;
+  --username-color: #00d9ff;
+  --hostname-color: #00d9ff;
+  --path-color: #7c3aed;
+  --command-color: #c084fc;
+  --background-color: #1a1d29;
   --font-family: 'Courier New', Courier, monospace;
   --border-width: 2px;
   --glow-size: 15px;
-  --base-font-size: 16px;
+  --base-font-size: 14px;
   --terminal-padding: 20px;
   --terminal-max-width: none;
   --terminal-margin: 0;
@@ -39,7 +48,7 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: var(--font-family);
-  background-color: var(--background-color);
+  background: linear-gradient(135deg, var(--kali-bg-darker) 0%, #2d3748 100%);
   color: var(--primary-color);
   overflow-x: hidden;
 }
@@ -49,28 +58,30 @@ body {
   flex-direction: column;
   min-height: 100vh;
   min-height: -webkit-fill-available;
+  padding: 20px;
   /* Safe area for notched devices (iPhone X, etc.) */
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding-top: max(20px, env(safe-area-inset-top));
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
 }
 
-/* Terminal container styles */
+/* Terminal container styles - Kali Linux window */
 .terminal, #bootScreen {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: var(--terminal-padding);
-  border: var(--border-width) solid var(--secondary-color);
-  box-shadow: 0 0 var(--glow-size) rgba(0, 217, 255, 0.5);
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-width: var(--terminal-max-width);
+  padding: 0;
+  border: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  max-width: 1400px;
   width: 100%;
-  height: 100%;
-  margin: var(--terminal-margin);
-  background-color: var(--background-color);
+  height: auto;
+  min-height: 500px;
+  margin: 0 auto;
+  background-color: var(--kali-bg-dark);
+  border-radius: 8px;
   -webkit-overflow-scrolling: touch;
   /* Better text rendering on mobile */
   -webkit-font-smoothing: antialiased;
@@ -78,75 +89,139 @@ body {
   /* Prevent text selection issues on mobile */
   user-select: text;
   -webkit-user-select: text;
-  /* Smooth scrolling */
-  scroll-behavior: smooth;
   /* Touch actions for better mobile interaction */
   touch-action: pan-y pinch-zoom;
   /* Momentum scrolling on iOS */
   overscroll-behavior: contain;
-  /* Remove border radius for full-screen look */
-  border-radius: 0;
+}
+
+/* Terminal header - mimics Kali window title bar */
+.terminal-header {
+  background: var(--kali-header-bg);
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--kali-purple);
+  flex-shrink: 0;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-close { background: #ff5f56; }
+.btn-minimize { background: #ffbd2e; }
+.btn-maximize { background: #27c93f; }
+
+.terminal-title {
+  color: #a0a0a0;
+  font-size: 13px;
+  flex: 1;
+  text-align: center;
+}
+
+.terminal-logo {
+  color: var(--kali-purple);
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+/* Terminal body content */
+.terminal-body {
+  flex: 1;
+  padding: var(--terminal-padding);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 #bootScreen {
+  padding: var(--terminal-padding);
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow-y: auto;
+  color: var(--primary-color);
 }
 
-/* Command line styles */
+/* Kali-style two-line prompt */
+.prompt-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.prompt-line-top {
+  margin-bottom: 2px;
+}
+
+/* Prompt components with Kali colors */
+.prompt-bracket {
+  color: var(--kali-purple);
+}
+
+.username {
+  color: var(--kali-cyan);
+  font-weight: normal;
+}
+
+.at-sign {
+  color: #a0a0a0;
+}
+
+.hostname {
+  color: var(--kali-cyan);
+  font-weight: normal;
+}
+
+.path {
+  color: var(--kali-purple);
+  font-weight: normal;
+}
+
+.prompt-symbol {
+  color: var(--kali-yellow);
+  margin: 0 5px;
+}
+
+.command-text {
+  color: var(--command-color);
+}
+
+/* Legacy prompt styling for compatibility */
 .line {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0;
   width: 100%;
+  margin-bottom: 5px;
 }
 
 .prompt {
-  margin-right: 5px;
   white-space: nowrap;
   flex-shrink: 0;
-  color: var(--prompt-color);
-  font-weight: bold;
 }
 
-/* Kali-style prompt components */
-.prompt .username {
-  color: var(--username-color);
-  font-weight: bold;
-}
-
-.prompt .at {
-  color: var(--primary-color);
-}
-
-.prompt .hostname {
-  color: var(--hostname-color);
-  font-weight: bold;
-}
-
-.prompt .separator {
-  color: var(--primary-color);
-}
-
-.prompt .path {
-  color: var(--path-color);
-  font-weight: bold;
-}
-
-.prompt .dollar {
-  color: var(--prompt-color);
-  font-weight: bold;
-}
-
-/* Input field styles */
+/* Input field styles - Kali style */
 input {
-  background: var(--background-color);
-  color: var(--primary-color);
+  background: transparent;
+  color: #fff;
   border: none;
   font-family: var(--font-family);
-  font-size: 1em;
+  font-size: var(--base-font-size);
   outline: none;
   flex: 1;
   min-width: 0;
@@ -157,32 +232,58 @@ input {
   -moz-appearance: none;
   appearance: none;
   border-radius: 0;
+  caret-color: var(--kali-purple);
   /* Prevent zoom on focus for iOS */
-  font-size: max(16px, 1em);
+  font-size: max(16px, var(--base-font-size));
 }
 
 /* Prevent iOS zoom on focus */
 input:focus {
-  font-size: max(16px, 1em);
+  font-size: max(16px, var(--base-font-size));
 }
 
-/* Output text styles */
+input::placeholder {
+  color: #555;
+  font-style: italic;
+}
+
+/* Output text styles - Kali colors */
 .output {
-  margin-bottom: 12px;
+  margin-bottom: 15px;
+  margin-left: 0;
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
+  color: #d1d5db;
+  line-height: 1.6;
+}
+
+/* Kali-style text colors */
+.highlight {
+  color: var(--kali-yellow);
+}
+
+.success {
+  color: var(--kali-green);
+}
+
+.error {
+  color: var(--kali-red);
+}
+
+.info {
+  color: var(--kali-cyan);
 }
 
 /* Link styles */
 a {
-  color: var(--secondary-color);
+  color: var(--kali-cyan);
   text-decoration: underline;
 }
 
 a:hover {
-  color: var(--primary-color);
+  color: var(--kali-purple);
   text-decoration: none;
 }
 
@@ -201,22 +302,27 @@ a:hover {
 
 /* ====== RESPONSIVE DESIGN ====== */
 
-/* Large desktop screens - full width */
+/* Large desktop screens */
 @media (min-width: 1200px) {
   :root {
-    --terminal-max-width: none;
-    --base-font-size: 17px;
+    --base-font-size: 15px;
     --terminal-padding: 24px;
-    --terminal-margin: 0;
+  }
+
+  .terminal, #bootScreen {
+    max-width: 1400px;
   }
 }
 
-/* Standard desktop - full width */
+/* Standard desktop */
 @media (min-width: 992px) and (max-width: 1199px) {
   :root {
-    --terminal-max-width: none;
+    --base-font-size: 14px;
     --terminal-padding: 20px;
-    --terminal-margin: 0;
+  }
+
+  .terminal, #bootScreen {
+    max-width: 1200px;
   }
 }
 
@@ -253,31 +359,48 @@ a:hover {
 /* Mobile portrait */
 @media (max-width: 575px) {
   :root {
-    --terminal-max-width: none;
-    --terminal-padding: 10px;
-    --terminal-margin: 4px;
-    --border-width: 1px;
-    --glow-size: 8px;
-    --base-font-size: 14px;
+    --base-font-size: 13px;
+    --terminal-padding: 12px;
   }
 
   body {
-    padding: 0;
+    padding: 10px;
   }
 
   .terminal, #bootScreen {
-    border-radius: 4px;
-    /* Reduce glow on mobile for better battery life */
-    box-shadow: 0 0 8px rgba(0, 217, 255, 0.4);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    min-height: 400px;
+  }
+
+  .terminal-header {
+    padding: 8px 12px;
+  }
+
+  .terminal-button {
+    width: 10px;
+    height: 10px;
+  }
+
+  .terminal-title {
+    font-size: 11px;
+  }
+
+  .terminal-logo {
+    font-size: 11px;
+  }
+
+  .terminal-body {
+    padding: 12px;
   }
 
   .output {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 0.95em;
   }
 
-  .prompt {
-    margin-right: 3px;
+  .prompt-line {
+    font-size: 13px;
   }
 
   input {

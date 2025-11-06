@@ -22,7 +22,7 @@ const CONFIG = {
 
   // Messages
   WELCOME_MESSAGE: 'Welcome to ZachBox Terminal v1.0',
-  HELP_PROMPT: 'Type <b>help</b> to view available commands.',
+  HELP_PROMPT: 'Type <span class="highlight">help</span> to view available commands.',
   COMMAND_NOT_FOUND: 'bash: ',
   LOADING_TEXT: 'Processing...',
 };
@@ -242,7 +242,7 @@ Buffalo, NY | Oct 2015 – Nov 2018, May 2023 – Nov 2023
 };
 
 // ====== DOM ELEMENTS ======
-let bootOutput, bootScreen, terminal, commandInput;
+let bootOutput, bootScreen, terminal, terminalBody, commandInput;
 
 // Command history for up/down arrow navigation
 let history = [];
@@ -258,10 +258,11 @@ function init() {
   bootOutput = document.getElementById('bootOutput');
   bootScreen = document.getElementById('bootScreen');
   terminal = document.getElementById('terminal');
+  terminalBody = document.querySelector('.terminal-body');
   commandInput = document.getElementById('commandInput');
 
   // Validate required elements exist
-  if (!bootOutput || !bootScreen || !terminal || !commandInput) {
+  if (!bootOutput || !bootScreen || !terminal || !terminalBody || !commandInput) {
     console.error('Required DOM elements not found');
     return;
   }
@@ -413,17 +414,24 @@ function navigateHistory(direction) {
 
 // ====== COMMAND PROCESSING ======
 /**
- * Display the entered command in the terminal
+ * Display the entered command in the terminal with Kali-style fancy prompt
  * @param {string} input - The command entered by the user
  */
 function addCommandLine(input) {
-  const line = document.createElement('div');
-  line.className = 'line';
-  const promptHtml = `<span class="prompt">
-    <span class="username">${CONFIG.USERNAME}</span><span class="at">@</span><span class="hostname">${CONFIG.HOSTNAME}</span><span class="separator">:</span><span class="path">${CONFIG.PATH}</span><span class="dollar">$</span>
-  </span>`;
-  line.innerHTML = promptHtml + ' ' + escapeHtml(input);
-  terminal.insertBefore(line, commandInput.parentNode);
+  // Create top line of prompt
+  const promptTop = document.createElement('div');
+  promptTop.className = 'prompt-line prompt-line-top';
+  promptTop.innerHTML = `<span class="prompt-bracket">┌──(</span><span class="username">${CONFIG.USERNAME}</span><span class="at-sign">@</span><span class="hostname">${CONFIG.HOSTNAME}</span><span class="prompt-bracket">)-[</span><span class="path">${CONFIG.PATH}</span><span class="prompt-bracket">]</span>`;
+
+  // Create bottom line with command
+  const promptBottom = document.createElement('div');
+  promptBottom.className = 'prompt-line';
+  promptBottom.innerHTML = `<span class="prompt-bracket">└─</span><span class="prompt-symbol">$</span> <span class="command-text">${escapeHtml(input)}</span>`;
+
+  // Find the input container and insert before it
+  const inputContainer = commandInput.parentNode.parentNode;
+  terminalBody.insertBefore(promptTop, inputContainer);
+  terminalBody.insertBefore(promptBottom, inputContainer);
   scrollToBottom();
 }
 
@@ -480,7 +488,8 @@ function autoComplete() {
 function typeOutput(text) {
   const outputDiv = document.createElement('div');
   outputDiv.className = 'output';
-  terminal.insertBefore(outputDiv, commandInput.parentNode);
+  const inputContainer = commandInput.parentNode.parentNode;
+  terminalBody.insertBefore(outputDiv, inputContainer);
 
   let charIndex = 0;
   const interval = setInterval(() => {
@@ -503,7 +512,8 @@ function fakeLoading(callback) {
   const loadingDiv = document.createElement('div');
   loadingDiv.className = 'output';
   loadingDiv.innerText = CONFIG.LOADING_TEXT;
-  terminal.insertBefore(loadingDiv, commandInput.parentNode);
+  const inputContainer = commandInput.parentNode.parentNode;
+  terminalBody.insertBefore(loadingDiv, inputContainer);
   scrollToBottom();
 
   setTimeout(() => {
@@ -516,15 +526,16 @@ function fakeLoading(callback) {
  * Clear the terminal and reset to initial state
  */
 function clearTerminal() {
-  const outputs = terminal.querySelectorAll('.output, .line');
+  const outputs = terminalBody.querySelectorAll('.output, .prompt-line:not(.prompt-line-top):not(:has(input)), .prompt-line-top');
 
   outputs.forEach(output => {
-    if (output !== commandInput.parentNode) {
+    // Don't remove the input container
+    if (!output.contains(commandInput)) {
       output.remove();
     }
   });
 
-  addStaticOutput(CONFIG.WELCOME_MESSAGE);
+  addStaticOutput(`<span class="info">${CONFIG.WELCOME_MESSAGE}</span>`);
   addStaticOutput(CONFIG.HELP_PROMPT);
 }
 
@@ -536,7 +547,8 @@ function addStaticOutput(text) {
   const div = document.createElement('div');
   div.className = 'output';
   div.innerHTML = text.replace(/\n/g, '<br>');
-  terminal.insertBefore(div, commandInput.parentNode);
+  const inputContainer = commandInput.parentNode.parentNode;
+  terminalBody.insertBefore(div, inputContainer);
   scrollToBottom();
 }
 
@@ -544,7 +556,7 @@ function addStaticOutput(text) {
  * Scroll terminal to the bottom
  */
 function scrollToBottom() {
-  terminal.scrollTop = terminal.scrollHeight;
+  terminalBody.scrollTop = terminalBody.scrollHeight;
 }
 
 // ====== UTILITY FUNCTIONS ======
