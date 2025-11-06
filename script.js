@@ -1849,7 +1849,6 @@ __/ =| o |=-~~\\  /~~\\  /~~\\  /~~\\ ____Y___________|__|______________________
       commandInput.disabled = false;
       commandInput.focus();
       addStaticOutput('<span style="color: var(--kali-green)">The train has passed. Next time, type \'ls\' correctly!</span>');
-      addStaticOutput('<span style="color: var(--kali-yellow)">Pro tip: This is a reference to the classic Unix \'sl\' command.</span>');
       return;
     }
 
