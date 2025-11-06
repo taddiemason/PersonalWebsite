@@ -6,8 +6,8 @@
 // ====== CONSTANTS ======
 const CONFIG = {
   // Timing constants (in milliseconds)
-  BOOT_LINE_DELAY: 80,
-  LOADING_DELAY: 300,
+  BOOT_LINE_DELAY: 15,  // Reduced from 80ms for faster boot
+  LOADING_DELAY: 200,   // Reduced from 300ms
   TYPING_SPEED: 2,
 
   // Colors (matched with CSS variables - Kali theme)
