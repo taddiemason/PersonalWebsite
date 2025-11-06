@@ -963,20 +963,39 @@ function renderVimInterface() {
 
   let content = '';
 
-  // Empty lines with vim tilde
-  for (let i = 0; i < 12; i++) {
-    content += '<span style="color: var(--kali-cyan)">~</span>\n';
+  // Display message in the "buffer"
+  if (vimMode.inCommandMode) {
+    content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-green)">You are stuck in vim!</span><span style="color: var(--kali-cyan)">                                     </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-yellow)">Command mode active - finish typing your command...</span><span style="color: var(--kali-cyan)">   </span>\n';
+    for (let i = 0; i < 9; i++) {
+      content += '<span style="color: var(--kali-cyan)">~</span>\n';
+    }
+  } else {
+    // Normal mode - show help
+    content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-red); font-weight: bold;">💀 You are stuck in vim! 💀</span><span style="color: var(--kali-cyan)">                              </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-yellow)">You\'re in NORMAL mode. To escape:</span><span style="color: var(--kali-cyan)">                       </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-green)">1. Press : (colon)</span><span style="color: var(--kali-cyan)">                                       </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-green)">2. Type q (quit)</span><span style="color: var(--kali-cyan)">                                         </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-green)">3. Press ENTER</span><span style="color: var(--kali-cyan)">                                           </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span>Other commands: <span style="color: var(--kali-cyan)">:q!  :wq  :x  :help                       </span>\n';
+    for (let i = 0; i < 3; i++) {
+      content += '<span style="color: var(--kali-cyan)">~</span>\n';
+    }
   }
-
-  content += '<span style="color: var(--kali-cyan)">~</span>\n';
 
   // Status line
   if (vimMode.inCommandMode) {
-    content += `<span style="color: var(--background-color); background-color: var(--kali-cyan)"> portfolio.txt [Modified]                                    1,1           All </span>\n`;
-    content += `<span style="color: var(--kali-yellow)">${vimMode.commandBuffer}</span>`;
+    content += `<span style="color: var(--background-color); background-color: var(--kali-purple)"> -- COMMAND MODE --                                                                </span>\n`;
+    content += `<span style="color: var(--kali-yellow); font-weight: bold;">${vimMode.commandBuffer}<span style="background-color: var(--kali-cyan); color: var(--background-color)">█</span></span>`;
   } else {
-    content += `<span style="color: var(--background-color); background-color: var(--kali-cyan)"> portfolio.txt [Modified]                                    1,1           All </span>\n`;
-    content += '<span style="color: var(--kali-yellow)">Type :q to quit, :wq to save and quit, or :q! to force quit</span>';
+    content += `<span style="color: var(--background-color); background-color: var(--kali-cyan)"> -- NORMAL MODE -- portfolio.txt [Modified]                    1,1           All </span>\n`;
+    content += '<span style="color: var(--kali-red); font-weight: bold;">Press : (colon) to enter a command!</span>';
   }
 
   vimContainer.innerHTML = content;
