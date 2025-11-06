@@ -1487,8 +1487,8 @@ function catFile(fileName) {
     return;
   }
 
-  // Display file contents
-  typeOutput(file.content);
+  // Display file contents immediately (like real cat command)
+  addStaticOutput(file.content);
 }
 
 /**
@@ -1498,6 +1498,12 @@ function updatePromptPath() {
   // Update the CONFIG.PATH to show current directory
   const shortPath = currentPath.replace('/home/user', '~');
   CONFIG.PATH = shortPath;
+
+  // Update the visible prompt in the input area
+  const pathSpan = document.querySelector('.input-container .path');
+  if (pathSpan) {
+    pathSpan.textContent = shortPath;
+  }
 }
 
 // ====== MATRIX EFFECT ======
