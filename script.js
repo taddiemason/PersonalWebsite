@@ -279,6 +279,205 @@ let matrixEffect = {
   columnCount: 0,
 };
 
+// ====== VIRTUAL FILE SYSTEM ======
+let currentPath = '/home/user';
+
+const fileSystem = {
+  '/home/user': {
+    type: 'directory',
+    contents: {
+      'README.txt': {
+        type: 'file',
+        content: `Welcome to ZachBox Terminal!
+
+This is an interactive terminal portfolio. You can use it in two ways:
+
+SIMPLE COMMANDS (for everyone):
+  help     - Show available commands
+  about    - Learn about me
+  resume   - View my resume
+  contact  - Get my contact info
+
+ADVANCED NAVIGATION (for tech users):
+  ls       - List files in current directory
+  ls -a    - List all files (including hidden)
+  cd       - Change directory
+  pwd      - Show current directory
+  cat      - Read file contents
+
+Try 'ls' to explore the file system, or just use the simple commands above!
+
+Hint: There might be hidden files... try 'ls -a'`
+      },
+      'about.txt': {
+        type: 'file',
+        content: commands.about
+      },
+      'resume.txt': {
+        type: 'file',
+        content: commands.resume
+      },
+      'contact.txt': {
+        type: 'file',
+        content: commands.contact
+      },
+      'projects': {
+        type: 'directory',
+        contents: {
+          'portfolio.txt': {
+            type: 'file',
+            content: `MY PORTFOLIO:
+
+Current Projects:
+  • Personal Terminal Website - zacharylalime.com
+    An interactive Kali Linux-themed terminal portfolio
+
+  • Network Infrastructure Projects
+    Various network administration and security implementations
+
+GitHub:
+  Check out github.txt in this directory for more info!
+
+Want to collaborate? Use the 'contact' command to reach out!`
+          },
+          'github.txt': {
+            type: 'file',
+            content: `GITHUB PROFILE:
+
+GitHub: github.com/taddiemason
+
+Featured Repositories:
+  • PersonalWebsite - This terminal portfolio site
+  • Various network and security projects
+
+Feel free to check out my repos and connect!
+
+Use 'contact' command to reach me directly.`
+          }
+        }
+      },
+      'documents': {
+        type: 'directory',
+        contents: {
+          'skills.txt': {
+            type: 'file',
+            content: `TECHNICAL SKILLS:
+
+Hardware & Infrastructure:
+  • Hardware Installation & Configuration
+  • Server Maintenance & Troubleshooting
+  • Network Infrastructure (LAN/WAN)
+
+Cloud & Systems:
+  • Azure AD
+  • Office 365
+  • Active Directory (GPOs, permissions)
+  • DHCP, DNS
+
+Security:
+  • Network Security
+  • VPN Configuration
+  • Firewalls, Routers, Switches
+  • Security Audits
+
+Software & Tools:
+  • System Performance Optimization
+  • Software Configuration & Updates
+  • Data Recovery & Backups
+  • Monitoring Tools
+
+General:
+  • Problem Solving
+  • Customer Service
+  • Network Troubleshooting
+  • Technical Documentation`
+          },
+          'certifications.txt': {
+            type: 'file',
+            content: `EDUCATION & CERTIFICATIONS:
+
+Current Education:
+  • Buffalo State University - Buffalo, NY
+    Bachelor of Science in Computer Information Systems (In Progress)
+    Expected Start: Fall 2025
+
+  • Erie Community College - Buffalo, NY
+    Associate of Applied Science in Information Technology
+    SUNY Network Support Technology Certificate
+    Expected Graduation: Summer 2025
+
+Certifications:
+  • SUNY Network Support Technology Certificate (In Progress)
+
+Continuous Learning:
+  • Actively engaged in IT industry
+  • Real-world experience alongside studies
+  • Pursuing Cyber Security specialization at SUNY Canton`
+          }
+        }
+      },
+      '.hidden': {
+        type: 'directory',
+        hidden: true,
+        contents: {
+          '.secrets.txt': {
+            type: 'file',
+            content: `SECRET EASTER EGG COMMANDS:
+
+You found the hidden commands! Here's the complete list:
+
+GAMES & FUN:
+  snake         - Play classic snake game
+  neo           - Enter the Matrix (digital rain effect)
+
+SYSTEM SIMULATION:
+  vim / vi      - Get stuck in vim (learn to escape!)
+  sudo [cmd]    - Try to use sudo (spoiler: you can't)
+  rm -rf /      - Attempt to delete everything (don't worry, it's safe)
+
+SECURITY TOOLS:
+  msfconsole    - Launch fake Metasploit Framework
+  metasploit    - Same as msfconsole
+
+Try them all! Some are interactive, some are just funny.
+Press ESC to exit most interactive modes.
+
+P.S. - If you found this, you're clearly tech-savvy. Let's connect!`
+          },
+          '.notes.txt': {
+            type: 'file',
+            content: `PERSONAL NOTES:
+
+Development Notes:
+  • This terminal was built with vanilla JavaScript
+  • Features a complete virtual file system
+  • Multiple easter eggs hidden throughout
+
+Fun Facts:
+  • The boot sequence is authentic Linux-style
+  • The Kali theme matches real Kali Linux
+  • All navigation commands work like real bash
+
+If you're reading this, you definitely know your way around a terminal.
+Nice work finding the hidden directory!
+
+Try all the easter egg commands - they're fun!`
+          }
+        }
+      },
+      'tools': {
+        type: 'directory',
+        contents: {
+          'help.txt': {
+            type: 'file',
+            content: commands.help
+          }
+        }
+      }
+    }
+  }
+};
+
 // ====== INITIALIZATION ======
 /**
  * Initialize the terminal application
@@ -558,6 +757,41 @@ msf6 > <span class="highlight">exit</span>
   if (cmd === 'snake') {
     fakeLoading(() => {
       startSnakeGame();
+    });
+    return;
+  }
+
+  // File system navigation: ls
+  if (cmd === 'ls' || cmd === 'ls -a' || cmd === 'ls -la' || cmd === 'ls -al') {
+    const showHidden = cmd.includes('-a');
+    fakeLoading(() => {
+      listDirectory(showHidden);
+    });
+    return;
+  }
+
+  // File system navigation: cd
+  if (cmd.startsWith('cd ') || cmd === 'cd') {
+    const targetDir = cmd === 'cd' ? '~' : cmd.substring(3).trim();
+    fakeLoading(() => {
+      changeDirectory(targetDir);
+    });
+    return;
+  }
+
+  // File system navigation: pwd
+  if (cmd === 'pwd') {
+    fakeLoading(() => {
+      addStaticOutput(currentPath);
+    });
+    return;
+  }
+
+  // File system navigation: cat
+  if (cmd.startsWith('cat ')) {
+    const fileName = cmd.substring(4).trim();
+    fakeLoading(() => {
+      catFile(fileName);
     });
     return;
   }
@@ -1130,6 +1364,140 @@ function exitVimSimulator(message) {
   // Show exit message
   addStaticOutput(`\n<span class="info">${message}</span>`);
   addStaticOutput('<span style="color: var(--kali-cyan)">Pro tip:</span> In real vim, press <span class="highlight">i</span> for insert mode, <span class="highlight">ESC</span> for normal mode!');
+}
+
+// ====== FILE SYSTEM NAVIGATION ======
+/**
+ * List directory contents
+ * @param {boolean} showHidden - Show hidden files (starting with .)
+ */
+function listDirectory(showHidden = false) {
+  const currentDir = fileSystem[currentPath];
+
+  if (!currentDir || currentDir.type !== 'directory') {
+    addStaticOutput('Error: Current path is not a directory');
+    return;
+  }
+
+  const items = [];
+
+  for (const [name, item] of Object.entries(currentDir.contents)) {
+    // Skip hidden files unless -a flag is used
+    if (item.hidden && !showHidden) {
+      continue;
+    }
+
+    if (item.type === 'directory') {
+      items.push(`<span style="color: var(--kali-cyan); font-weight: bold;">${name}/</span>`);
+    } else {
+      items.push(`<span style="color: var(--kali-green);">${name}</span>`);
+    }
+  }
+
+  if (items.length === 0) {
+    addStaticOutput('(empty directory)');
+  } else {
+    // Display in columns, similar to real ls
+    addStaticOutput(items.join('  '));
+  }
+}
+
+/**
+ * Change directory
+ * @param {string} targetDir - Target directory path
+ */
+function changeDirectory(targetDir) {
+  // Handle special cases
+  if (targetDir === '~' || targetDir === '') {
+    currentPath = '/home/user';
+    updatePromptPath();
+    return;
+  }
+
+  if (targetDir === '..') {
+    // Go up one directory
+    if (currentPath !== '/home/user') {
+      const parts = currentPath.split('/');
+      parts.pop();
+      currentPath = parts.join('/') || '/';
+      updatePromptPath();
+    }
+    return;
+  }
+
+  if (targetDir === '.') {
+    // Stay in current directory
+    return;
+  }
+
+  // Handle absolute paths
+  if (targetDir.startsWith('/')) {
+    if (fileSystem[targetDir] && fileSystem[targetDir].type === 'directory') {
+      currentPath = targetDir;
+      updatePromptPath();
+    } else {
+      addStaticOutput(`bash: cd: ${targetDir}: No such file or directory`);
+    }
+    return;
+  }
+
+  // Handle relative paths
+  const newPath = currentPath === '/' ? `/${targetDir}` : `${currentPath}/${targetDir}`;
+  const currentDir = fileSystem[currentPath];
+
+  if (currentDir && currentDir.contents && currentDir.contents[targetDir]) {
+    const target = currentDir.contents[targetDir];
+
+    if (target.type === 'directory') {
+      currentPath = newPath;
+      // Add path to fileSystem if it doesn't exist yet
+      if (!fileSystem[newPath]) {
+        fileSystem[newPath] = target;
+      }
+      updatePromptPath();
+    } else {
+      addStaticOutput(`bash: cd: ${targetDir}: Not a directory`);
+    }
+  } else {
+    addStaticOutput(`bash: cd: ${targetDir}: No such file or directory`);
+  }
+}
+
+/**
+ * Display file contents
+ * @param {string} fileName - Name of file to display
+ */
+function catFile(fileName) {
+  const currentDir = fileSystem[currentPath];
+
+  if (!currentDir || currentDir.type !== 'directory') {
+    addStaticOutput('Error: Current path is not a directory');
+    return;
+  }
+
+  const file = currentDir.contents[fileName];
+
+  if (!file) {
+    addStaticOutput(`cat: ${fileName}: No such file or directory`);
+    return;
+  }
+
+  if (file.type === 'directory') {
+    addStaticOutput(`cat: ${fileName}: Is a directory`);
+    return;
+  }
+
+  // Display file contents
+  typeOutput(file.content);
+}
+
+/**
+ * Update the prompt to show current directory
+ */
+function updatePromptPath() {
+  // Update the CONFIG.PATH to show current directory
+  const shortPath = currentPath.replace('/home/user', '~');
+  CONFIG.PATH = shortPath;
 }
 
 // ====== MATRIX EFFECT ======
