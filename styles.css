@@ -58,31 +58,29 @@ body {
   flex-direction: column;
   min-height: 100vh;
   min-height: -webkit-fill-available;
-  padding: 20px;
+  padding: 0;
   /* Safe area for notched devices (iPhone X, etc.) */
-  padding-top: max(20px, env(safe-area-inset-top));
-  padding-bottom: max(20px, env(safe-area-inset-bottom));
-  padding-left: max(20px, env(safe-area-inset-left));
-  padding-right: max(20px, env(safe-area-inset-right));
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
-/* Terminal container styles - Kali Linux window */
+/* Terminal container styles - Full-screen terminal */
 .terminal, #bootScreen {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 0;
+  padding: var(--terminal-padding);
   border: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  max-width: 1400px;
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 100%;
-  height: auto;
-  min-height: 500px;
-  margin: 0 auto;
+  height: 100%;
+  margin: 0;
   background-color: var(--kali-bg-dark);
-  border-radius: 8px;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
   /* Better text rendering on mobile */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -95,63 +93,10 @@ body {
   overscroll-behavior: contain;
 }
 
-/* Terminal header - mimics Kali window title bar */
-.terminal-header {
-  background: var(--kali-header-bg);
-  padding: 10px 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--kali-purple);
-  flex-shrink: 0;
-}
-
-.terminal-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.terminal-button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-close { background: #ff5f56; }
-.btn-minimize { background: #ffbd2e; }
-.btn-maximize { background: #27c93f; }
-
-.terminal-title {
-  color: #a0a0a0;
-  font-size: 13px;
-  flex: 1;
-  text-align: center;
-}
-
-.terminal-logo {
-  color: var(--kali-purple);
-  font-weight: bold;
-  font-size: 13px;
-  letter-spacing: 1px;
-}
-
-/* Terminal body content */
-.terminal-body {
-  flex: 1;
-  padding: var(--terminal-padding);
-  overflow-y: auto;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
-
 #bootScreen {
-  padding: var(--terminal-padding);
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  overflow-y: auto;
   color: var(--primary-color);
 }
 
@@ -308,10 +253,6 @@ a:hover {
     --base-font-size: 15px;
     --terminal-padding: 24px;
   }
-
-  .terminal, #bootScreen {
-    max-width: 1400px;
-  }
 }
 
 /* Standard desktop */
@@ -319,10 +260,6 @@ a:hover {
   :root {
     --base-font-size: 14px;
     --terminal-padding: 20px;
-  }
-
-  .terminal, #bootScreen {
-    max-width: 1200px;
   }
 }
 
@@ -347,10 +284,6 @@ a:hover {
     --base-font-size: 15px;
   }
 
-  .terminal, #bootScreen {
-    border-radius: 4px;
-  }
-
   .output {
     margin-bottom: 10px;
   }
@@ -361,37 +294,6 @@ a:hover {
   :root {
     --base-font-size: 13px;
     --terminal-padding: 12px;
-  }
-
-  body {
-    padding: 10px;
-  }
-
-  .terminal, #bootScreen {
-    border-radius: 6px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-    min-height: 400px;
-  }
-
-  .terminal-header {
-    padding: 8px 12px;
-  }
-
-  .terminal-button {
-    width: 10px;
-    height: 10px;
-  }
-
-  .terminal-title {
-    font-size: 11px;
-  }
-
-  .terminal-logo {
-    font-size: 11px;
-  }
-
-  .terminal-body {
-    padding: 12px;
   }
 
   .output {
