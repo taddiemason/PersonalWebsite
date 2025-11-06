@@ -141,6 +141,7 @@ function generateTerminalStartup() {
     "[    0.197500] Starting PostgreSQL database... [ OK ]",
     "[    0.198000] System initialization complete",
     "[    0.199000] ZachBox Terminal v1.0 ready",
+    "[    0.199500] Wake up, Neo... The answer is hidden",
     "[    0.200000] Starting bash shell...",
     "[    0.202000] Type 'help' to view available commands.",
   ];
@@ -157,7 +158,11 @@ const commands = {
 
   whoami: `user`,
 
-  about: `I'm currently working as a Network Administrator at Synchronet while pursuing a degree in Cyber Security at SUNY Canton University. I recently completed my AAS in Information Technology and earned a Network Support Technology Certificate from Erie Community College. Throughout my academic journey, I've been actively engaged in the IT field, applying classroom knowledge to real-world scenarios and continuing to strengthen my technical skills. Prior to transitioning into tech, I spent four years as a Field Sales Representative at DSI Systems Inc., where I developed strong leadership, decision-making, and collaboration skills. With a blend of academic training, hands-on IT experience, and a solid foundation in business, I've built a well-rounded skill set that I'm eager to contribute to future opportunities in the field.`,
+  about: `I'm currently working as a Network Administrator at Synchronet while pursuing a degree in Cyber Security at SUNY Canton University. I recently completed my AAS in Information Technology and earned a Network Support Technology Certificate from Erie Community College. Throughout my academic journey, I've been actively engaged in the IT field, applying classroom knowledge to real-world scenarios and continuing to strengthen my technical skills. Prior to transitioning into tech, I spent four years as a Field Sales Representative at DSI Systems Inc., where I developed strong leadership, decision-making, and collaboration skills. With a blend of academic training, hands-on IT experience, and a solid foundation in business, I've built a well-rounded skill set that I'm eager to contribute to future opportunities in the field.
+
+---
+01001000 01101001 01100100 01100100 01100101 01101110
+(Hidden)`,
 
   contact: `You can reach me here:\n- Email: Zacharylalime@gmail.com\n- Phone: (716) 341-3678`,
 
@@ -236,6 +241,10 @@ Buffalo, NY | Oct 2015 – Nov 2018, May 2023 – Nov 2023
   • Consistently recognized for achieving high levels of customer satisfaction
   • Acted as a liaison between AT&T and third-party field sales (DSI) to ensure alignment and support
   • Awarded Certificate of Excellence (2017) for outstanding performance in customer service
+
+---
+01101100 01110011 00100000 00101101 01100001
+(ls -a)
 `,
 
   clear: `Clearing the terminal...`,
@@ -247,6 +256,7 @@ let bootOutput, bootScreen, terminal, commandInput;
 // Command history for up/down arrow navigation
 let history = [];
 let historyIndex = -1;
+let commandCount = 0; // Track commands for progressive hints
 
 // ====== SNAKE GAME STATE ======
 let snakeGame = {
@@ -307,7 +317,9 @@ ADVANCED NAVIGATION (for tech users):
 
 Try 'ls' to explore the file system, or just use the simple commands above!
 
-Hint: There might be hidden files... try 'ls -a'`
+"Not all files are visible to the naked eye.
+Some require... augmented perception."
+  - Try 'ls -a' to see beyond the veil`
       },
       'about.txt': {
         type: 'file',
@@ -319,7 +331,12 @@ Hint: There might be hidden files... try 'ls -a'`
       },
       'contact.txt': {
         type: 'file',
-        content: commands.contact
+        content: `You can reach me here:
+- Email: Zacharylalime@gmail.com
+- Phone: (716) 341-3678
+
+---
+LS -A | GREP "^\\."`
       },
       'projects': {
         type: 'directory',
@@ -675,6 +692,10 @@ function processCommand(cmd) {
     return;
   }
 
+  // Increment command counter and check for progressive hints
+  commandCount++;
+  maybeShowProgressiveHint();
+
   // Easter egg: sudo commands
   if (cmd.startsWith('sudo ')) {
     const sudoMessages = [
@@ -796,18 +817,98 @@ msf6 > <span class="highlight">exit</span>
     return;
   }
 
+  // Special handling for whoami with Matrix easter egg
+  if (cmd === 'whoami') {
+    fakeLoading(() => {
+      if (Math.random() < 0.1) {
+        typeOutput('Neo... I mean, user');
+      } else {
+        typeOutput(commands.whoami);
+      }
+      maybeShowGlitchMessage();
+    });
+    return;
+  }
+
+  // Special handling for help with Matrix easter egg
+  if (cmd === 'help') {
+    fakeLoading(() => {
+      typeOutput(commands.help);
+      if (Math.random() < 0.15) {
+        setTimeout(() => {
+          addStaticOutput('\n<span style="color: var(--kali-cyan)">P.S. - Some secrets require the -a flag...</span>');
+        }, 500);
+      }
+      maybeShowGlitchMessage();
+    });
+    return;
+  }
+
   if (cmd === 'clear') {
     fakeLoading(() => {
       clearTerminal();
+      maybeShowGlitchMessage();
     });
   } else if (commands.hasOwnProperty(cmd)) {
     fakeLoading(() => {
       typeOutput(commands[cmd]);
+      maybeShowGlitchMessage();
     });
   } else {
-    fakeLoading(() => {
-      typeOutput(CONFIG.COMMAND_NOT_FOUND + escapeHtml(cmd) + ': command not found');
-    });
+    // Handle Matrix character commands for hints
+    if (cmd === 'oracle') {
+      fakeLoading(() => {
+        addStaticOutput('bash: oracle: command not found');
+        addStaticOutput('<span style="color: var(--kali-cyan)">The Oracle says: "You already know the path. ls -a will show you."</span>');
+      });
+    } else if (cmd === 'morpheus') {
+      fakeLoading(() => {
+        addStaticOutput('bash: morpheus: command not found');
+        addStaticOutput('<span style="color: var(--kali-cyan)">Morpheus whispers: "Free your mind... check .hidden directories"</span>');
+      });
+    } else if (cmd === 'trinity') {
+      fakeLoading(() => {
+        addStaticOutput('bash: trinity: command not found');
+        addStaticOutput('<span style="color: var(--kali-cyan)">Trinity left a message in .hidden/.secrets.txt</span>');
+      });
+    } else if (cmd === 'follow' || cmd === 'follow white rabbit') {
+      fakeLoading(() => {
+        addStaticOutput('<span style="color: var(--kali-green)">The white rabbit hops into a hidden directory...</span>');
+        addStaticOutput('Try looking for files that start with \'.\'');
+        addStaticOutput('<span style="color: var(--kali-yellow)">Hint: ls -a</span>');
+      });
+    } else if (cmd === 'knock' || cmd === 'knock knock') {
+      fakeLoading(() => {
+        addStaticOutput('<span style="color: var(--kali-green)">Who\'s there?</span>');
+        addStaticOutput('');
+        addStaticOutput('Hidden files.');
+        addStaticOutput('');
+        addStaticOutput('Hidden files who?');
+        addStaticOutput('');
+        addStaticOutput('<span style="color: var(--kali-yellow)">Hidden files that you can see with: ls -a</span>');
+      });
+    } else if (cmd === 'red pill') {
+      fakeLoading(() => {
+        addStaticOutput('<span style="color: var(--kali-red); font-weight: bold;">You take the red pill...</span>');
+        addStaticOutput('');
+        addStaticOutput('You chose to see how deep the rabbit hole goes.');
+        addStaticOutput('');
+        addStaticOutput('<span style="color: var(--kali-cyan)">The truth awaits in:</span> cd .hidden');
+      });
+    } else if (cmd === 'blue pill') {
+      fakeLoading(() => {
+        addStaticOutput('<span style="color: var(--kali-blue)">You take the blue pill...</span>');
+        addStaticOutput('');
+        addStaticOutput('The story ends. You wake up in your bed and believe');
+        addStaticOutput('whatever you want to believe.');
+        addStaticOutput('');
+        addStaticOutput('<span style="color: var(--kali-yellow)">But curiosity remains... type \'red pill\' to continue.</span>');
+      });
+    } else {
+      fakeLoading(() => {
+        typeOutput(CONFIG.COMMAND_NOT_FOUND + escapeHtml(cmd) + ': command not found');
+      });
+    }
   }
 }
 
@@ -924,6 +1025,40 @@ function escapeHtml(text) {
     "'": '&#039;',
   };
   return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// ====== MATRIX BREADCRUMB SYSTEM ======
+/**
+ * Show random Matrix-style glitch messages (5% chance)
+ */
+function maybeShowGlitchMessage() {
+  if (Math.random() < 0.05) {
+    const glitchMessages = [
+      '<span style="color: var(--kali-cyan)">[SYSTEM]</span> Follow the white rabbit... try \'ls -a\'',
+      '<span style="color: var(--kali-cyan)">[TRACE]</span> There is no spoon, only hidden directories',
+      '<span style="color: var(--kali-cyan)">[DEBUG]</span> Knock knock, Neo. Hidden files exist in ~',
+      '<span style="color: var(--kali-green)">[WHISPER]</span> The Matrix has you... but so do hidden files',
+      '<span style="color: var(--kali-green)">[HINT]</span> Not everything is visible. Some files start with \'.\'',
+      '<span style="color: var(--kali-cyan)">[ECHO]</span> Free your mind... and your files with ls -a',
+    ];
+    const message = glitchMessages[Math.floor(Math.random() * glitchMessages.length)];
+    setTimeout(() => {
+      addStaticOutput(message);
+    }, 300);
+  }
+}
+
+/**
+ * Show progressive hints based on command count
+ */
+function maybeShowProgressiveHint() {
+  if (commandCount === 5) {
+    addStaticOutput('<span style="color: var(--kali-yellow)">[WHISPER]</span> Try exploring with \'ls -a\'');
+  } else if (commandCount === 10) {
+    addStaticOutput('<span style="color: var(--kali-yellow)">[HINT]</span> Hidden files start with \'.\'');
+  } else if (commandCount === 20) {
+    addStaticOutput('<span style="color: var(--kali-red)">[ORACLE]</span> cd .hidden && ls && cat .secrets.txt');
+  }
 }
 
 // ====== SNAKE GAME ======
