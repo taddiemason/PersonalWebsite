@@ -446,6 +446,7 @@ You found the hidden commands! Here's the complete list:
 GAMES & FUN:
   snake         - Play classic snake game
   neo           - Enter the Matrix (digital rain effect)
+  sl            - Steam locomotive (for when you mistype 'ls')
 
 SYSTEM SIMULATION:
   vim / vi      - Get stuck in vim (learn to escape!)
@@ -455,6 +456,15 @@ SYSTEM SIMULATION:
 SECURITY TOOLS:
   msfconsole    - Launch fake Metasploit Framework
   metasploit    - Same as msfconsole
+
+MATRIX DISCOVERY COMMANDS:
+  follow        - Follow the white rabbit
+  knock         - Knock knock joke
+  red pill      - Choose to see the truth
+  blue pill     - Stay in ignorance
+  oracle        - Seek wisdom from the Oracle
+  morpheus      - Get advice from Morpheus
+  trinity       - Trinity has a message for you
 
 Try them all! Some are interactive, some are just funny.
 Press ESC to exit most interactive modes.
@@ -778,6 +788,14 @@ msf6 > <span class="highlight">exit</span>
   if (cmd === 'snake') {
     fakeLoading(() => {
       startSnakeGame();
+    });
+    return;
+  }
+
+  // Easter egg: sl (steam locomotive - famous ls typo)
+  if (cmd === 'sl') {
+    fakeLoading(() => {
+      startSteamLocomotive();
     });
     return;
   }
@@ -1781,6 +1799,70 @@ function stopMatrixEffect() {
   // Show exit message
   addStaticOutput('\n<span style="color: #00ff00;">You have been disconnected from the Matrix.</span>');
   addStaticOutput('<span class="info">Reality restored.</span>');
+}
+
+// ====== STEAM LOCOMOTIVE (SL) ======
+/**
+ * Start the steam locomotive animation (famous ls typo joke)
+ */
+function startSteamLocomotive() {
+  addStaticOutput('<span style="color: var(--kali-yellow)">You meant \'ls\', didn\'t you? Too late now...</span>\n');
+
+  const locomotive = `
+      ====        ________                ___________
+  _D _|  |_______/        \\__I_I_____===__|_________|
+   |(_)---  |   H\\________/ |   |        =|___ ___|   _________________
+   /     |  |   H  |  |     |   |         ||_| |_||   _|                \\_____A
+  |      |  |   H  |__--------------------| [___] |   =|                        |
+  |  ________|___H__/__|_____/[][]~\\_______|       |   -|                        |
+  |/ |   |-----------I_____I [][] []  D   |=======|____|________________________|_
+__/ =| o |=-~~\\  /~~\\  /~~\\  /~~\\ ____Y___________|__|__________________________|_
+ |/-=|___|=O=====O=====O=====O   |_____/~\\___/          |_D__D__D_|  |_D__D__D_|
+  \\_/      \\__/  \\__/  \\__/  \\__/      \\_/               \\_/   \\_/    \\_/   \\_/`;
+
+  // Create container for animation
+  const trainContainer = document.createElement('div');
+  trainContainer.id = 'trainAnimation';
+  trainContainer.style.fontFamily = 'monospace';
+  trainContainer.style.fontSize = '10px';
+  trainContainer.style.lineHeight = '1';
+  trainContainer.style.whiteSpace = 'pre';
+  trainContainer.style.overflow = 'hidden';
+  trainContainer.style.color = 'var(--kali-cyan)';
+  trainContainer.style.marginBottom = '10px';
+
+  const inputContainer = commandInput.parentNode.parentNode;
+  terminal.insertBefore(trainContainer, inputContainer);
+
+  // Disable command input during animation
+  commandInput.disabled = true;
+
+  const trainLines = locomotive.split('\n');
+  const terminalWidth = 80; // Approximate terminal width in characters
+  const trainWidth = Math.max(...trainLines.map(line => line.length));
+
+  let position = terminalWidth;
+  const animationInterval = setInterval(() => {
+    if (position < -trainWidth) {
+      clearInterval(animationInterval);
+      trainContainer.remove();
+      commandInput.disabled = false;
+      commandInput.focus();
+      addStaticOutput('<span style="color: var(--kali-green)">The train has passed. Next time, type \'ls\' correctly!</span>');
+      addStaticOutput('<span style="color: var(--kali-yellow)">Pro tip: This is a reference to the classic Unix \'sl\' command.</span>');
+      return;
+    }
+
+    // Create frame by padding each line
+    const frame = trainLines.map(line => {
+      const padding = ' '.repeat(Math.max(0, position));
+      return padding + line;
+    }).join('\n');
+
+    trainContainer.textContent = frame;
+    position -= 2; // Move train left by 2 characters per frame
+    scrollToBottom();
+  }, 50); // Update every 50ms for smooth animation
 }
 
 // ====== START APPLICATION ======
