@@ -6,8 +6,8 @@
 // ====== CONSTANTS ======
 const CONFIG = {
   // Timing constants (in milliseconds)
-  BOOT_LINE_DELAY: 15,  // Reduced from 80ms for faster boot
-  LOADING_DELAY: 200,   // Reduced from 300ms
+  BOOT_LINE_DELAY: 60,  // 60ms per line for ~3 second boot
+  LOADING_DELAY: 200,
   TYPING_SPEED: 2,
 
   // Colors (matched with CSS variables - Kali theme)
@@ -16,7 +16,7 @@ const CONFIG = {
   BACKGROUND_COLOR: '#0A0E14',
 
   // Prompt configuration
-  USERNAME: 'zach',
+  USERNAME: 'user',
   HOSTNAME: 'zachbox',
   PATH: '~',
 
