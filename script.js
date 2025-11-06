@@ -269,6 +269,16 @@ let vimMode = {
   inCommandMode: false,
 };
 
+// ====== MATRIX EFFECT STATE ======
+let matrixEffect = {
+  active: false,
+  interval: null,
+  columns: [],
+  characters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:,.<>?/',
+  fontSize: 14,
+  columnCount: 0,
+};
+
 // ====== INITIALIZATION ======
 /**
  * Initialize the terminal application
@@ -532,6 +542,14 @@ msf6 > <span class="highlight">exit</span>
   if (cmd === 'vim' || cmd === 'vi') {
     fakeLoading(() => {
       startVimSimulator();
+    });
+    return;
+  }
+
+  // Easter egg: Matrix effect
+  if (cmd === 'neo') {
+    fakeLoading(() => {
+      startMatrixEffect();
     });
     return;
   }
@@ -1112,6 +1130,148 @@ function exitVimSimulator(message) {
   // Show exit message
   addStaticOutput(`\n<span class="info">${message}</span>`);
   addStaticOutput('<span style="color: var(--kali-cyan)">Pro tip:</span> In real vim, press <span class="highlight">i</span> for insert mode, <span class="highlight">ESC</span> for normal mode!');
+}
+
+// ====== MATRIX EFFECT ======
+/**
+ * Start the Matrix falling characters effect
+ */
+function startMatrixEffect() {
+  if (matrixEffect.active) {
+    addStaticOutput('Matrix effect is already running! Press ESC to stop.');
+    return;
+  }
+
+  matrixEffect.active = true;
+
+  // Create canvas for Matrix rain
+  const canvas = document.createElement('canvas');
+  canvas.id = 'matrixCanvas';
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.style.zIndex = '9999';
+  canvas.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+  canvas.style.pointerEvents = 'none';
+
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  // Calculate number of columns
+  matrixEffect.columnCount = Math.floor(canvas.width / matrixEffect.fontSize);
+
+  // Initialize columns
+  matrixEffect.columns = [];
+  for (let i = 0; i < matrixEffect.columnCount; i++) {
+    matrixEffect.columns[i] = Math.floor(Math.random() * canvas.height / matrixEffect.fontSize);
+  }
+
+  // Show "Wake up, Neo..." message
+  setTimeout(() => {
+    addStaticOutput('\n\n<span style="color: #00ff00; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00ff00;">Wake up, Neo...</span>');
+    addStaticOutput('<span style="color: #00ff00;">The Matrix has you.</span>');
+    addStaticOutput('<span style="color: #00ff00;">Follow the white rabbit.</span>\n');
+    addStaticOutput('<span style="color: var(--kali-yellow)">Press ESC to exit the Matrix</span>');
+  }, 500);
+
+  // Disable command input
+  commandInput.disabled = true;
+
+  // Draw Matrix rain
+  matrixEffect.interval = setInterval(() => {
+    drawMatrixRain(ctx, canvas);
+  }, 50);
+
+  // Add keyboard listener
+  document.addEventListener('keydown', handleMatrixKeydown);
+}
+
+/**
+ * Draw the Matrix rain effect
+ */
+function drawMatrixRain(ctx, canvas) {
+  // Semi-transparent black to create trail effect
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Set font and color
+  ctx.font = `${matrixEffect.fontSize}px monospace`;
+  ctx.fillStyle = '#0f0'; // Bright green
+
+  // Draw characters
+  for (let i = 0; i < matrixEffect.columns.length; i++) {
+    // Random character
+    const char = matrixEffect.characters.charAt(
+      Math.floor(Math.random() * matrixEffect.characters.length)
+    );
+
+    // Calculate position
+    const x = i * matrixEffect.fontSize;
+    const y = matrixEffect.columns[i] * matrixEffect.fontSize;
+
+    // Draw character
+    ctx.fillStyle = '#0f0'; // Green
+    ctx.fillText(char, x, y);
+
+    // Randomly reset column or increment
+    if (y > canvas.height && Math.random() > 0.975) {
+      matrixEffect.columns[i] = 0;
+    } else {
+      matrixEffect.columns[i]++;
+    }
+
+    // Add brighter character at the head
+    if (Math.random() > 0.98) {
+      ctx.fillStyle = '#fff'; // White for leading character
+      ctx.fillText(char, x, y);
+    }
+  }
+}
+
+/**
+ * Handle keyboard input during Matrix effect
+ */
+function handleMatrixKeydown(e) {
+  if (!matrixEffect.active) return;
+
+  if (e.key === 'Escape') {
+    stopMatrixEffect();
+    e.preventDefault();
+  }
+}
+
+/**
+ * Stop the Matrix effect
+ */
+function stopMatrixEffect() {
+  matrixEffect.active = false;
+
+  if (matrixEffect.interval) {
+    clearInterval(matrixEffect.interval);
+    matrixEffect.interval = null;
+  }
+
+  // Remove canvas
+  const canvas = document.getElementById('matrixCanvas');
+  if (canvas) {
+    canvas.remove();
+  }
+
+  // Remove keyboard listener
+  document.removeEventListener('keydown', handleMatrixKeydown);
+
+  // Re-enable command input
+  commandInput.disabled = false;
+  commandInput.focus();
+
+  // Show exit message
+  addStaticOutput('\n<span style="color: #00ff00;">You have been disconnected from the Matrix.</span>');
+  addStaticOutput('<span class="info">Reality restored. 🟢</span>');
 }
 
 // ====== START APPLICATION ======
