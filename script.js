@@ -479,11 +479,11 @@ function processCommand(cmd) {
   // Easter egg: sudo commands
   if (cmd.startsWith('sudo ')) {
     const sudoMessages = [
-      'Nice try, but you\'re not root here! 😏',
-      'user is not in the sudoers file. This incident will be reported. 🚨',
-      'Permission denied. Are you trying to hack my terminal? 🤔',
-      'sudo: access denied. Maybe try saying "please"? 😄',
-      'With great power comes great responsibility... which you don\'t have. 🦸',
+      'Nice try, but you\'re not root here!',
+      'user is not in the sudoers file. This incident will be reported.',
+      'Permission denied. Are you trying to hack my terminal?',
+      'sudo: access denied. Maybe try saying "please"?',
+      'With great power comes great responsibility... which you don\'t have.',
     ];
     const randomMessage = sudoMessages[Math.floor(Math.random() * sudoMessages.length)];
     fakeLoading(() => {
@@ -513,7 +513,7 @@ No active sessions.
 
 msf6 > <span class="highlight">exit</span>
 
-[*] Exiting msfconsole... Just kidding! This is a portfolio site. 😄
+[*] Exiting msfconsole... Just kidding! This is a portfolio site.
 [*] But if you're interested in pentesting, let's talk!`;
       typeOutput(msfBanner);
     });
@@ -523,17 +523,17 @@ msf6 > <span class="highlight">exit</span>
   // Easter egg: rm -rf /
   if (cmd === 'rm -rf /' || cmd === 'rm -rf /*') {
     fakeLoading(() => {
-      addStaticOutput(`<span style="color: var(--kali-red)">⚠️  WARNING: DANGEROUS COMMAND DETECTED! ⚠️</span>`);
+      addStaticOutput(`<span style="color: var(--kali-red)">WARNING: DANGEROUS COMMAND DETECTED!</span>`);
       addStaticOutput('');
       addStaticOutput(`<span style="color: var(--kali-yellow)">rm: it is dangerous to operate recursively on '/'`);
       addStaticOutput(`rm: use --no-preserve-root to override this failsafe</span>`);
       addStaticOutput('');
-      addStaticOutput(`Are you crazy?! That would delete EVERYTHING! 💀`);
+      addStaticOutput(`Are you crazy?! That would delete EVERYTHING!`);
       addStaticOutput(`This command would wipe your entire system.`);
       addStaticOutput('');
       addStaticOutput(`<span style="color: var(--kali-cyan)">Pro tip:</span> Never run this on a real system unless you enjoy`);
       addStaticOutput(`reinstalling your OS and explaining to your boss why`);
-      addStaticOutput(`the production server is gone. 😅`);
+      addStaticOutput(`the production server is gone.`);
     });
     return;
   }
@@ -721,7 +721,7 @@ function startSnakeGame() {
   placeFood();
 
   // Display initial game board
-  addStaticOutput('<span class="info">🐍 SNAKE GAME 🐍</span>');
+  addStaticOutput('<span class="info">SNAKE GAME</span>');
   addStaticOutput('Use arrow keys to move. Press ESC to quit.\n');
 
   const gameBoard = document.createElement('div');
@@ -925,7 +925,7 @@ function endSnakeGame(userQuit) {
   if (userQuit) {
     addStaticOutput(`\n<span class="info">Game quit. Final score: ${snakeGame.score}</span>`);
   } else {
-    addStaticOutput(`\n<span style="color: var(--kali-red)">💀 GAME OVER!</span>`);
+    addStaticOutput(`\n<span style="color: var(--kali-red)">GAME OVER!</span>`);
     addStaticOutput(`<span class="info">Final score: ${snakeGame.score}</span>`);
     addStaticOutput('Type <span class="highlight">snake</span> to play again!');
   }
@@ -993,7 +993,7 @@ function renderVimInterface() {
   } else {
     // Normal mode - show help
     content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
-    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-red); font-weight: bold;">💀 You are stuck in vim! 💀</span><span style="color: var(--kali-cyan)">                              </span>\n';
+    content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-red); font-weight: bold;">You are stuck in vim!</span><span style="color: var(--kali-cyan)">                              </span>\n';
     content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
     content += '<span style="color: var(--kali-cyan)">~  </span><span style="color: var(--kali-yellow)">You\'re in NORMAL mode. To escape:</span><span style="color: var(--kali-cyan)">                       </span>\n';
     content += '<span style="color: var(--kali-cyan)">~                                                              </span>\n';
@@ -1076,9 +1076,9 @@ function executeVimCommand(command) {
   // Quit commands
   if (cmd === ':q' || cmd === ':quit' || cmd === ':q!' || cmd === ':wq' || cmd === ':x') {
     const exitMessages = {
-      ':q': 'Exiting vim... You\'re free! 🎉',
+      ':q': 'Exiting vim... You\'re free!',
       ':q!': 'Force quitting vim without saving!',
-      ':wq': 'Saving and quitting... (nothing to save though 😄)',
+      ':wq': 'Saving and quitting... (nothing to save though)',
       ':x': 'Saving and exiting vim...',
       ':quit': 'Quitting vim normally.',
     };
@@ -1271,7 +1271,7 @@ function stopMatrixEffect() {
 
   // Show exit message
   addStaticOutput('\n<span style="color: #00ff00;">You have been disconnected from the Matrix.</span>');
-  addStaticOutput('<span class="info">Reality restored. 🟢</span>');
+  addStaticOutput('<span class="info">Reality restored.</span>');
 }
 
 // ====== START APPLICATION ======
