@@ -155,7 +155,7 @@ const commands = {
   clear    - Clear the terminal screen
   whoami   - Display current user`,
 
-  whoami: `zach`,
+  whoami: `user`,
 
   about: `I'm currently working as a Network Administrator at Synchronet while pursuing a degree in Cyber Security at SUNY Canton University. I recently completed my AAS in Information Technology and earned a Network Support Technology Certificate from Erie Community College. Throughout my academic journey, I've been actively engaged in the IT field, applying classroom knowledge to real-world scenarios and continuing to strengthen my technical skills. Prior to transitioning into tech, I spent four years as a Field Sales Representative at DSI Systems Inc., where I developed strong leadership, decision-making, and collaboration skills. With a blend of academic training, hands-on IT experience, and a solid foundation in business, I've built a well-rounded skill set that I'm eager to contribute to future opportunities in the field.`,
 
@@ -442,6 +442,50 @@ function processCommand(cmd) {
   // Validate command is a string
   if (typeof cmd !== 'string') {
     typeOutput('Invalid command format');
+    return;
+  }
+
+  // Easter egg: sudo commands
+  if (cmd.startsWith('sudo ')) {
+    const sudoMessages = [
+      'Nice try, but you\'re not root here! 😏',
+      'user is not in the sudoers file. This incident will be reported. 🚨',
+      'Permission denied. Are you trying to hack my terminal? 🤔',
+      'sudo: access denied. Maybe try saying "please"? 😄',
+      'With great power comes great responsibility... which you don\'t have. 🦸',
+    ];
+    const randomMessage = sudoMessages[Math.floor(Math.random() * sudoMessages.length)];
+    fakeLoading(() => {
+      typeOutput(randomMessage);
+    });
+    return;
+  }
+
+  // Easter egg: Metasploit Framework
+  if (cmd === 'msfconsole' || cmd === 'metasploit') {
+    fakeLoading(() => {
+      const msfBanner = `
+       =[ metasploit v6.3.14-dev                          ]
++ -- --=[ 2377 exploits - 1232 auxiliary - 413 post       ]
++ -- --=[ 1385 payloads - 46 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit tip: View all productivity tips with the
+tips command
+
+msf6 > <span class="highlight">sessions -l</span>
+
+Active sessions
+===============
+
+No active sessions.
+
+msf6 > <span class="highlight">exit</span>
+
+[*] Exiting msfconsole... Just kidding! This is a portfolio site. 😄
+[*] But if you're interested in pentesting, let's talk!`;
+      typeOutput(msfBanner);
+    });
     return;
   }
 
