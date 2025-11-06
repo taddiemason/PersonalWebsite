@@ -44,14 +44,15 @@ export default {
       const pathname = url.pathname;
 
       // Map the pathname to a file
-      const fileName = FILE_MAP[pathname] || pathname.slice(1);
+      let fileName = FILE_MAP[pathname] || pathname.slice(1);
 
       // Security: Prevent directory traversal
       if (fileName.includes('..') || fileName.includes('//')) {
         return new Response('Invalid path', { status: 400 });
       }
 
-      // Build GitHub URL
+      // Build GitHub URL (strip query params since GitHub doesn't use them)
+      // But keep them in cache key for proper versioning
       const githubUrl = GITHUB_BASE + fileName;
 
       // Check cache first
