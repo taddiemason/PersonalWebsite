@@ -56,21 +56,12 @@ export default {
       // But keep them in cache key for proper versioning
       const githubUrl = GITHUB_BASE + fileName;
 
-      // Check cache first (TEMPORARILY DISABLED FOR HTML TO FORCE FRESH FETCH)
-      const cache = caches.default;
-      let response = await cache.match(request);
+      // CACHING COMPLETELY DISABLED - Always fetch fresh from GitHub
+      // const cache = caches.default;
+      // let response = await cache.match(request);
 
-      // Skip cache for HTML files to ensure fresh content
-      const isHtml = pathname === '/' || pathname.endsWith('.html');
-      if (response && !isHtml) {
-        // Return cached response with cache hit header
-        response = new Response(response.body, response);
-        response.headers.set('X-Cache', 'HIT');
-        return response;
-      }
-
-      // Fetch from GitHub
-      response = await fetch(githubUrl);
+      // Fetch from GitHub (bypassing cache entirely)
+      let response = await fetch(githubUrl);
 
       if (!response.ok) {
         // If file not found and it's root, try fetching Core.html as fallback
@@ -122,8 +113,8 @@ export default {
         headers: headers,
       });
 
-      // Store in cache for future requests
-      ctx.waitUntil(cache.put(request, modifiedResponse.clone()));
+      // Caching disabled - not storing in cache
+      // ctx.waitUntil(cache.put(request, modifiedResponse.clone()));
 
       return modifiedResponse;
     } catch (error) {
