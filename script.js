@@ -242,7 +242,7 @@ Buffalo, NY | Oct 2015 – Nov 2018, May 2023 – Nov 2023
 };
 
 // ====== DOM ELEMENTS ======
-let bootOutput, bootScreen, terminal, terminalBody, commandInput;
+let bootOutput, bootScreen, terminal, commandInput;
 
 // Command history for up/down arrow navigation
 let history = [];
@@ -258,11 +258,10 @@ function init() {
   bootOutput = document.getElementById('bootOutput');
   bootScreen = document.getElementById('bootScreen');
   terminal = document.getElementById('terminal');
-  terminalBody = document.querySelector('.terminal-body');
   commandInput = document.getElementById('commandInput');
 
   // Validate required elements exist
-  if (!bootOutput || !bootScreen || !terminal || !terminalBody || !commandInput) {
+  if (!bootOutput || !bootScreen || !terminal || !commandInput) {
     console.error('Required DOM elements not found');
     return;
   }
@@ -430,8 +429,8 @@ function addCommandLine(input) {
 
   // Find the input container and insert before it
   const inputContainer = commandInput.parentNode.parentNode;
-  terminalBody.insertBefore(promptTop, inputContainer);
-  terminalBody.insertBefore(promptBottom, inputContainer);
+  terminal.insertBefore(promptTop, inputContainer);
+  terminal.insertBefore(promptBottom, inputContainer);
   scrollToBottom();
 }
 
@@ -489,7 +488,7 @@ function typeOutput(text) {
   const outputDiv = document.createElement('div');
   outputDiv.className = 'output';
   const inputContainer = commandInput.parentNode.parentNode;
-  terminalBody.insertBefore(outputDiv, inputContainer);
+  terminal.insertBefore(outputDiv, inputContainer);
 
   let charIndex = 0;
   const interval = setInterval(() => {
@@ -513,7 +512,7 @@ function fakeLoading(callback) {
   loadingDiv.className = 'output';
   loadingDiv.innerText = CONFIG.LOADING_TEXT;
   const inputContainer = commandInput.parentNode.parentNode;
-  terminalBody.insertBefore(loadingDiv, inputContainer);
+  terminal.insertBefore(loadingDiv, inputContainer);
   scrollToBottom();
 
   setTimeout(() => {
@@ -526,7 +525,7 @@ function fakeLoading(callback) {
  * Clear the terminal and reset to initial state
  */
 function clearTerminal() {
-  const outputs = terminalBody.querySelectorAll('.output, .prompt-line:not(.prompt-line-top):not(:has(input)), .prompt-line-top');
+  const outputs = terminal.querySelectorAll('.output, .prompt-line:not(.prompt-line-top):not(:has(input)), .prompt-line-top');
 
   outputs.forEach(output => {
     // Don't remove the input container
@@ -548,7 +547,7 @@ function addStaticOutput(text) {
   div.className = 'output';
   div.innerHTML = text.replace(/\n/g, '<br>');
   const inputContainer = commandInput.parentNode.parentNode;
-  terminalBody.insertBefore(div, inputContainer);
+  terminal.insertBefore(div, inputContainer);
   scrollToBottom();
 }
 
@@ -556,7 +555,7 @@ function addStaticOutput(text) {
  * Scroll terminal to the bottom
  */
 function scrollToBottom() {
-  terminalBody.scrollTop = terminalBody.scrollHeight;
+  terminal.scrollTop = terminal.scrollHeight;
 }
 
 // ====== UTILITY FUNCTIONS ======
