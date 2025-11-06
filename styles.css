@@ -110,7 +110,8 @@ body {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .prompt-line-top {
@@ -118,6 +119,16 @@ body {
 }
 
 /* Prompt components with Kali colors */
+.prompt-bracket,
+.username,
+.at-sign,
+.hostname,
+.path,
+.prompt-symbol {
+  display: inline;
+  white-space: nowrap;
+}
+
 .prompt-bracket {
   color: var(--kali-purple);
 }
