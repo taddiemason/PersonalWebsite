@@ -32,7 +32,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=20251106-kali-authentic">
+  <link rel="stylesheet" href="styles.css?v=20251106-fullscreen">
 
   <!-- Theme Color - Kali inspired -->
   <meta name="theme-color" content="#1e1e2e">
@@ -45,13 +45,15 @@
 
   <!-- Terminal Section -->
   <main class="terminal" id="terminal" style="display: none;" role="main">
-      <div class="output" role="status" aria-live="polite">
-        <span class="info">Welcome to ZachBox Terminal v1.0</span>
-      </div>
-      <div class="output" role="status">
-        Type <span class="highlight">help</span> to view available commands.
-      </div>
+    <div class="output" role="status" aria-live="polite">
+      <span class="info">Welcome to ZachBox Terminal v1.0</span>
+    </div>
+    <div class="output" role="status">
+      Type <span class="highlight">help</span> to view available commands.
+    </div>
 
+    <!-- Input Container for proper element insertion -->
+    <div class="input-container">
       <!-- Command Input Line with Kali-style fancy prompt -->
       <div class="prompt-line prompt-line-top">
         <span class="prompt-bracket">┌──(</span><span class="username">zach</span><span class="at-sign">@</span><span class="hostname">zachbox</span><span class="prompt-bracket">)-[</span><span class="path">~</span><span class="prompt-bracket">]</span>
@@ -76,9 +78,10 @@
       <div id="terminalHelp" class="sr-only">
         Interactive terminal. Type 'help' for available commands. Use arrow keys to navigate command history. Press Tab for autocomplete.
       </div>
+    </div>
   </main>
 
   <!-- Main Script -->
-  <script src="script.js?v=20251106-kali-authentic"></script>
+  <script src="script.js?v=20251106-fullscreen"></script>
 </body>
 </html>
