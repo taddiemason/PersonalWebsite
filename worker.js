@@ -56,19 +56,12 @@ export default {
       // But keep them in cache key for proper versioning
       const githubUrl = GITHUB_BASE + fileName;
 
-      // Check cache first
-      const cache = caches.default;
-      let response = await cache.match(request);
+      // CACHING COMPLETELY DISABLED - Always fetch fresh from GitHub
+      // This ensures latest content is always served
+      // TODO: Re-enable caching once site is stable
 
-      if (response) {
-        // Return cached response with cache hit header
-        response = new Response(response.body, response);
-        response.headers.set('X-Cache', 'HIT');
-        return response;
-      }
-
-      // Fetch from GitHub
-      response = await fetch(githubUrl);
+      // Fetch from GitHub (no cache check)
+      let response = await fetch(githubUrl);
 
       if (!response.ok) {
         // If file not found and it's root, try fetching Core.html as fallback
@@ -88,19 +81,19 @@ export default {
       const extension = fileName.substring(fileName.lastIndexOf('.'));
       const contentType = CONTENT_TYPES[extension] || 'text/plain';
 
-      // Determine cache control
-      let cacheControl;
-      if (extension === '.html') {
-        cacheControl = CACHE_CONFIG.HTML;
-      } else if (extension === '.css') {
-        cacheControl = CACHE_CONFIG.CSS;
-      } else if (extension === '.js') {
-        cacheControl = CACHE_CONFIG.JS;
-      } else if (['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico'].includes(extension)) {
-        cacheControl = CACHE_CONFIG.IMAGES;
-      } else {
-        cacheControl = 'public, max-age=3600';
-      }
+      // Determine cache control - DISABLED: Always serve fresh content
+      let cacheControl = 'no-cache, no-store, must-revalidate';
+      // if (extension === '.html') {
+      //   cacheControl = CACHE_CONFIG.HTML;
+      // } else if (extension === '.css') {
+      //   cacheControl = CACHE_CONFIG.CSS;
+      // } else if (extension === '.js') {
+      //   cacheControl = CACHE_CONFIG.JS;
+      // } else if (['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico'].includes(extension)) {
+      //   cacheControl = CACHE_CONFIG.IMAGES;
+      // } else {
+      //   cacheControl = 'public, max-age=3600';
+      // }
 
       // Create response with proper headers
       const headers = new Headers({
@@ -120,8 +113,8 @@ export default {
         headers: headers,
       });
 
-      // Store in cache for future requests
-      ctx.waitUntil(cache.put(request, modifiedResponse.clone()));
+      // Caching disabled - not storing in cache
+      // ctx.waitUntil(cache.put(request, modifiedResponse.clone()));
 
       return modifiedResponse;
     } catch (error) {
