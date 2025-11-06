@@ -1,6 +1,7 @@
 /**
  * Cloudflare Worker for Zach's Terminal Website
  * Serves static files with caching and proper content types
+ * Version: 2024-11-05 - Cache-busting enabled
  */
 
 // Cache configuration
