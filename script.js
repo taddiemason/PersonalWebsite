@@ -513,18 +513,17 @@ msf6 > <span class="highlight">exit</span>
   // Easter egg: rm -rf /
   if (cmd === 'rm -rf /' || cmd === 'rm -rf /*') {
     fakeLoading(() => {
-      const warning = `<span style="color: var(--kali-red)">⚠️  WARNING: DANGEROUS COMMAND DETECTED! ⚠️</span>
-
-<span style="color: var(--kali-yellow)">rm: it is dangerous to operate recursively on '/'
-rm: use --no-preserve-root to override this failsafe</span>
-
-Are you crazy?! That would delete EVERYTHING! 💀
-This command would wipe your entire system.
-
-<span style="color: var(--kali-cyan)">Pro tip:</span> Never run this on a real system unless you enjoy
-reinstalling your OS and explaining to your boss why
-the production server is gone. 😅`;
-      typeOutput(warning);
+      addStaticOutput(`<span style="color: var(--kali-red)">⚠️  WARNING: DANGEROUS COMMAND DETECTED! ⚠️</span>`);
+      addStaticOutput('');
+      addStaticOutput(`<span style="color: var(--kali-yellow)">rm: it is dangerous to operate recursively on '/'`);
+      addStaticOutput(`rm: use --no-preserve-root to override this failsafe</span>`);
+      addStaticOutput('');
+      addStaticOutput(`Are you crazy?! That would delete EVERYTHING! 💀`);
+      addStaticOutput(`This command would wipe your entire system.`);
+      addStaticOutput('');
+      addStaticOutput(`<span style="color: var(--kali-cyan)">Pro tip:</span> Never run this on a real system unless you enjoy`);
+      addStaticOutput(`reinstalling your OS and explaining to your boss why`);
+      addStaticOutput(`the production server is gone. 😅`);
     });
     return;
   }
