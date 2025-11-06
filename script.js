@@ -262,6 +262,13 @@ let snakeGame = {
   speed: 150,
 };
 
+// ====== VIM SIMULATOR STATE ======
+let vimMode = {
+  active: false,
+  commandBuffer: '',
+  inCommandMode: false,
+};
+
 // ====== INITIALIZATION ======
 /**
  * Initialize the terminal application
@@ -499,6 +506,33 @@ msf6 > <span class="highlight">exit</span>
 [*] Exiting msfconsole... Just kidding! This is a portfolio site. 😄
 [*] But if you're interested in pentesting, let's talk!`;
       typeOutput(msfBanner);
+    });
+    return;
+  }
+
+  // Easter egg: rm -rf /
+  if (cmd === 'rm -rf /' || cmd === 'rm -rf /*') {
+    fakeLoading(() => {
+      const warning = `<span style="color: var(--kali-red)">⚠️  WARNING: DANGEROUS COMMAND DETECTED! ⚠️</span>
+
+<span style="color: var(--kali-yellow)">rm: it is dangerous to operate recursively on '/'
+rm: use --no-preserve-root to override this failsafe</span>
+
+Are you crazy?! That would delete EVERYTHING! 💀
+This command would wipe your entire system.
+
+<span style="color: var(--kali-cyan)">Pro tip:</span> Never run this on a real system unless you enjoy
+reinstalling your OS and explaining to your boss why
+the production server is gone. 😅`;
+      typeOutput(warning);
+    });
+    return;
+  }
+
+  // Easter egg: vim simulator
+  if (cmd === 'vim' || cmd === 'vi') {
+    fakeLoading(() => {
+      startVimSimulator();
     });
     return;
   }
@@ -878,6 +912,188 @@ function endSnakeGame(userQuit) {
     addStaticOutput(`<span class="info">Final score: ${snakeGame.score}</span>`);
     addStaticOutput('Type <span class="highlight">snake</span> to play again!');
   }
+}
+
+// ====== VIM SIMULATOR ======
+/**
+ * Start the vim simulator
+ */
+function startVimSimulator() {
+  if (vimMode.active) {
+    addStaticOutput('Vim is already running! Type :q to quit.');
+    return;
+  }
+
+  vimMode.active = true;
+  vimMode.commandBuffer = '';
+  vimMode.inCommandMode = false;
+
+  // Create vim interface
+  const vimContainer = document.createElement('div');
+  vimContainer.id = 'vimSimulator';
+  vimContainer.style.fontFamily = 'monospace';
+  vimContainer.style.lineHeight = '1.4';
+  vimContainer.style.whiteSpace = 'pre';
+  vimContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+  vimContainer.style.padding = '10px';
+  vimContainer.style.borderRadius = '4px';
+  vimContainer.style.marginTop = '10px';
+  vimContainer.style.marginBottom = '10px';
+
+  const inputContainer = commandInput.parentNode.parentNode;
+  terminal.insertBefore(vimContainer, inputContainer);
+
+  // Disable command input
+  commandInput.disabled = true;
+
+  // Render vim interface
+  renderVimInterface();
+
+  // Add vim keyboard listener
+  document.addEventListener('keydown', handleVimKeydown);
+
+  scrollToBottom();
+}
+
+/**
+ * Render the vim interface
+ */
+function renderVimInterface() {
+  const vimContainer = document.getElementById('vimSimulator');
+  if (!vimContainer) return;
+
+  let content = '';
+
+  // Empty lines with vim tilde
+  for (let i = 0; i < 12; i++) {
+    content += '<span style="color: var(--kali-cyan)">~</span>\n';
+  }
+
+  content += '<span style="color: var(--kali-cyan)">~</span>\n';
+
+  // Status line
+  if (vimMode.inCommandMode) {
+    content += `<span style="color: var(--background-color); background-color: var(--kali-cyan)"> portfolio.txt [Modified]                                    1,1           All </span>\n`;
+    content += `<span style="color: var(--kali-yellow)">${vimMode.commandBuffer}</span>`;
+  } else {
+    content += `<span style="color: var(--background-color); background-color: var(--kali-cyan)"> portfolio.txt [Modified]                                    1,1           All </span>\n`;
+    content += '<span style="color: var(--kali-yellow)">Type :q to quit, :wq to save and quit, or :q! to force quit</span>';
+  }
+
+  vimContainer.innerHTML = content;
+  scrollToBottom();
+}
+
+/**
+ * Handle keyboard input during vim simulation
+ */
+function handleVimKeydown(e) {
+  if (!vimMode.active) return;
+
+  e.preventDefault();
+
+  // Check if we're in command mode
+  if (e.key === ':' && !vimMode.inCommandMode) {
+    vimMode.inCommandMode = true;
+    vimMode.commandBuffer = ':';
+    renderVimInterface();
+    return;
+  }
+
+  if (vimMode.inCommandMode) {
+    if (e.key === 'Enter') {
+      // Execute vim command
+      executeVimCommand(vimMode.commandBuffer);
+      return;
+    } else if (e.key === 'Escape') {
+      // Cancel command mode
+      vimMode.inCommandMode = false;
+      vimMode.commandBuffer = '';
+      renderVimInterface();
+      return;
+    } else if (e.key === 'Backspace') {
+      // Remove last character
+      if (vimMode.commandBuffer.length > 1) {
+        vimMode.commandBuffer = vimMode.commandBuffer.slice(0, -1);
+        renderVimInterface();
+      }
+      return;
+    } else if (e.key.length === 1) {
+      // Add character to buffer
+      vimMode.commandBuffer += e.key;
+      renderVimInterface();
+      return;
+    }
+  } else {
+    // In normal mode, only : activates command mode
+    // All other keys are ignored (real vim behavior)
+  }
+}
+
+/**
+ * Execute a vim command
+ * @param {string} command - The vim command to execute
+ */
+function executeVimCommand(command) {
+  const cmd = command.trim().toLowerCase();
+
+  // Quit commands
+  if (cmd === ':q' || cmd === ':quit' || cmd === ':q!' || cmd === ':wq' || cmd === ':x') {
+    const exitMessages = {
+      ':q': 'Exiting vim... You\'re free! 🎉',
+      ':q!': 'Force quitting vim without saving!',
+      ':wq': 'Saving and quitting... (nothing to save though 😄)',
+      ':x': 'Saving and exiting vim...',
+      ':quit': 'Quitting vim normally.',
+    };
+
+    const message = exitMessages[cmd] || 'Exiting vim...';
+    exitVimSimulator(message);
+  } else if (cmd === ':help' || cmd === ':h') {
+    vimMode.inCommandMode = false;
+    vimMode.commandBuffer = '';
+    addStaticOutput('\n<span class="info">Vim Help: This is a simplified vim simulator!</span>');
+    addStaticOutput('Commands: :q (quit), :q! (force quit), :wq (save & quit), :help (this message)');
+    renderVimInterface();
+  } else if (cmd === ':w' || cmd === ':write') {
+    vimMode.inCommandMode = false;
+    vimMode.commandBuffer = '';
+    addStaticOutput('\n<span style="color: var(--kali-green)">"portfolio.txt" [New] 0L, 0B written</span>');
+    renderVimInterface();
+  } else {
+    // Unknown command
+    vimMode.inCommandMode = false;
+    vimMode.commandBuffer = '';
+    addStaticOutput(`\n<span style="color: var(--kali-red)">E492: Not an editor command: ${command}</span>`);
+    renderVimInterface();
+  }
+}
+
+/**
+ * Exit vim simulator
+ * @param {string} message - Exit message to display
+ */
+function exitVimSimulator(message) {
+  vimMode.active = false;
+  vimMode.inCommandMode = false;
+  vimMode.commandBuffer = '';
+
+  // Remove vim keyboard listener
+  document.removeEventListener('keydown', handleVimKeydown);
+
+  // Re-enable command input
+  commandInput.disabled = false;
+  commandInput.focus();
+
+  // Remove vim container
+  const vimContainer = document.getElementById('vimSimulator');
+  if (vimContainer) {
+    vimContainer.remove();
+  }
+
+  // Show exit message
+  addStaticOutput(`\n<span class="info">${message}</span>`);
+  addStaticOutput('<span style="color: var(--kali-cyan)">Pro tip:</span> In real vim, press <span class="highlight">i</span> for insert mode, <span class="highlight">ESC</span> for normal mode!');
 }
 
 // ====== START APPLICATION ======
