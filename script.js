@@ -248,6 +248,20 @@ let bootOutput, bootScreen, terminal, commandInput;
 let history = [];
 let historyIndex = -1;
 
+// ====== SNAKE GAME STATE ======
+let snakeGame = {
+  active: false,
+  interval: null,
+  snake: [],
+  food: {},
+  direction: 'right',
+  nextDirection: 'right',
+  score: 0,
+  gridWidth: 30,
+  gridHeight: 15,
+  speed: 150,
+};
+
 // ====== INITIALIZATION ======
 /**
  * Initialize the terminal application
@@ -489,6 +503,14 @@ msf6 > <span class="highlight">exit</span>
     return;
   }
 
+  // Easter egg: Snake Game
+  if (cmd === 'snake') {
+    fakeLoading(() => {
+      startSnakeGame();
+    });
+    return;
+  }
+
   if (cmd === 'clear') {
     fakeLoading(() => {
       clearTerminal();
@@ -617,6 +639,245 @@ function escapeHtml(text) {
     "'": '&#039;',
   };
   return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// ====== SNAKE GAME ======
+/**
+ * Start the snake game
+ */
+function startSnakeGame() {
+  if (snakeGame.active) {
+    addStaticOutput('Snake game is already running! Press ESC to quit.');
+    return;
+  }
+
+  // Initialize game state
+  snakeGame.active = true;
+  snakeGame.score = 0;
+  snakeGame.direction = 'right';
+  snakeGame.nextDirection = 'right';
+
+  // Initialize snake in the middle
+  const startX = Math.floor(snakeGame.gridWidth / 2);
+  const startY = Math.floor(snakeGame.gridHeight / 2);
+  snakeGame.snake = [
+    { x: startX, y: startY },
+    { x: startX - 1, y: startY },
+    { x: startX - 2, y: startY },
+  ];
+
+  // Place first food
+  placeFood();
+
+  // Display initial game board
+  addStaticOutput('<span class="info">🐍 SNAKE GAME 🐍</span>');
+  addStaticOutput('Use arrow keys to move. Press ESC to quit.\n');
+
+  const gameBoard = document.createElement('div');
+  gameBoard.id = 'snakeGameBoard';
+  gameBoard.style.fontFamily = 'monospace';
+  gameBoard.style.lineHeight = '1';
+  gameBoard.style.whiteSpace = 'pre';
+  const inputContainer = commandInput.parentNode.parentNode;
+  terminal.insertBefore(gameBoard, inputContainer);
+
+  // Disable command input during game
+  commandInput.disabled = true;
+
+  // Render initial board
+  renderSnakeGame();
+
+  // Start game loop
+  snakeGame.interval = setInterval(updateSnakeGame, snakeGame.speed);
+
+  // Add keyboard listener for game controls
+  document.addEventListener('keydown', handleSnakeKeydown);
+}
+
+/**
+ * Place food at random location
+ */
+function placeFood() {
+  let validPosition = false;
+  while (!validPosition) {
+    snakeGame.food = {
+      x: Math.floor(Math.random() * snakeGame.gridWidth),
+      y: Math.floor(Math.random() * snakeGame.gridHeight),
+    };
+
+    // Make sure food doesn't spawn on snake
+    validPosition = !snakeGame.snake.some(
+      segment => segment.x === snakeGame.food.x && segment.y === snakeGame.food.y
+    );
+  }
+}
+
+/**
+ * Render the snake game board
+ */
+function renderSnakeGame() {
+  const gameBoard = document.getElementById('snakeGameBoard');
+  if (!gameBoard) return;
+
+  let board = '┌' + '─'.repeat(snakeGame.gridWidth) + '┐\n';
+
+  for (let y = 0; y < snakeGame.gridHeight; y++) {
+    board += '│';
+    for (let x = 0; x < snakeGame.gridWidth; x++) {
+      // Check if this is the snake head
+      if (snakeGame.snake[0].x === x && snakeGame.snake[0].y === y) {
+        board += '<span style="color: var(--kali-cyan)">●</span>';
+      }
+      // Check if this is the snake body
+      else if (snakeGame.snake.slice(1).some(segment => segment.x === x && segment.y === y)) {
+        board += '<span style="color: var(--kali-green)">○</span>';
+      }
+      // Check if this is food
+      else if (snakeGame.food.x === x && snakeGame.food.y === y) {
+        board += '<span style="color: var(--kali-red)">◆</span>';
+      }
+      else {
+        board += ' ';
+      }
+    }
+    board += '│\n';
+  }
+
+  board += '└' + '─'.repeat(snakeGame.gridWidth) + '┘\n';
+  board += `<span class="info">Score: ${snakeGame.score}</span>`;
+
+  gameBoard.innerHTML = board;
+  scrollToBottom();
+}
+
+/**
+ * Update snake game state
+ */
+function updateSnakeGame() {
+  if (!snakeGame.active) return;
+
+  // Update direction
+  snakeGame.direction = snakeGame.nextDirection;
+
+  // Calculate new head position
+  const head = { ...snakeGame.snake[0] };
+
+  switch (snakeGame.direction) {
+    case 'up':
+      head.y--;
+      break;
+    case 'down':
+      head.y++;
+      break;
+    case 'left':
+      head.x--;
+      break;
+    case 'right':
+      head.x++;
+      break;
+  }
+
+  // Check wall collision
+  if (head.x < 0 || head.x >= snakeGame.gridWidth ||
+      head.y < 0 || head.y >= snakeGame.gridHeight) {
+    endSnakeGame(false);
+    return;
+  }
+
+  // Check self collision
+  if (snakeGame.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+    endSnakeGame(false);
+    return;
+  }
+
+  // Add new head
+  snakeGame.snake.unshift(head);
+
+  // Check if food eaten
+  if (head.x === snakeGame.food.x && head.y === snakeGame.food.y) {
+    snakeGame.score += 10;
+    placeFood();
+    // Don't remove tail (snake grows)
+  } else {
+    // Remove tail (snake moves)
+    snakeGame.snake.pop();
+  }
+
+  // Render updated board
+  renderSnakeGame();
+}
+
+/**
+ * Handle keyboard input during snake game
+ */
+function handleSnakeKeydown(e) {
+  if (!snakeGame.active) return;
+
+  switch (e.key) {
+    case 'ArrowUp':
+      if (snakeGame.direction !== 'down') {
+        snakeGame.nextDirection = 'up';
+      }
+      e.preventDefault();
+      break;
+    case 'ArrowDown':
+      if (snakeGame.direction !== 'up') {
+        snakeGame.nextDirection = 'down';
+      }
+      e.preventDefault();
+      break;
+    case 'ArrowLeft':
+      if (snakeGame.direction !== 'right') {
+        snakeGame.nextDirection = 'left';
+      }
+      e.preventDefault();
+      break;
+    case 'ArrowRight':
+      if (snakeGame.direction !== 'left') {
+        snakeGame.nextDirection = 'right';
+      }
+      e.preventDefault();
+      break;
+    case 'Escape':
+      endSnakeGame(true);
+      e.preventDefault();
+      break;
+  }
+}
+
+/**
+ * End the snake game
+ * @param {boolean} userQuit - Whether user quit voluntarily
+ */
+function endSnakeGame(userQuit) {
+  snakeGame.active = false;
+
+  if (snakeGame.interval) {
+    clearInterval(snakeGame.interval);
+    snakeGame.interval = null;
+  }
+
+  // Remove keyboard listener
+  document.removeEventListener('keydown', handleSnakeKeydown);
+
+  // Re-enable command input
+  commandInput.disabled = false;
+  commandInput.focus();
+
+  // Remove game board
+  const gameBoard = document.getElementById('snakeGameBoard');
+  if (gameBoard) {
+    gameBoard.remove();
+  }
+
+  // Show game over message
+  if (userQuit) {
+    addStaticOutput(`\n<span class="info">Game quit. Final score: ${snakeGame.score}</span>`);
+  } else {
+    addStaticOutput(`\n<span style="color: var(--kali-red)">💀 GAME OVER!</span>`);
+    addStaticOutput(`<span class="info">Final score: ${snakeGame.score}</span>`);
+    addStaticOutput('Type <span class="highlight">snake</span> to play again!');
+  }
 }
 
 // ====== START APPLICATION ======
