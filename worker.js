@@ -56,11 +56,13 @@ export default {
       // But keep them in cache key for proper versioning
       const githubUrl = GITHUB_BASE + fileName;
 
-      // Check cache first
+      // Check cache first (TEMPORARILY DISABLED FOR HTML TO FORCE FRESH FETCH)
       const cache = caches.default;
       let response = await cache.match(request);
 
-      if (response) {
+      // Skip cache for HTML files to ensure fresh content
+      const isHtml = pathname === '/' || pathname.endsWith('.html');
+      if (response && !isHtml) {
         // Return cached response with cache hit header
         response = new Response(response.body, response);
         response.headers.set('X-Cache', 'HIT');
