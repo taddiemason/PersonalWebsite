@@ -280,6 +280,39 @@ let matrixEffect = {
   columnCount: 0,
 };
 
+// ====== TETRIS GAME STATE ======
+let tetrisGame = {
+  active: false,
+  interval: null,
+  board: [],
+  currentPiece: null,
+  currentX: 0,
+  currentY: 0,
+  score: 0,
+  lines: 0,
+  speed: 500,
+  gridWidth: 10,
+  gridHeight: 20,
+  pieces: {
+    I: [[1,1,1,1]],
+    O: [[1,1],[1,1]],
+    T: [[0,1,0],[1,1,1]],
+    S: [[0,1,1],[1,1,0]],
+    Z: [[1,1,0],[0,1,1]],
+    J: [[1,0,0],[1,1,1]],
+    L: [[0,0,1],[1,1,1]]
+  },
+  colors: {
+    I: 'cyan',
+    O: 'yellow',
+    T: 'purple',
+    S: 'green',
+    Z: 'red',
+    J: 'blue',
+    L: 'orange'
+  }
+};
+
 // ====== VIRTUAL FILE SYSTEM ======
 let currentPath = '/home/user';
 
@@ -436,6 +469,7 @@ You found the hidden commands! Here's the complete list:
 
 GAMES & FUN:
   snake         - Play classic snake game
+  tetris        - Play Tetris (arrow keys to move/rotate, space to drop)
   neo           - Enter the Matrix (digital rain effect)
   sl            - Steam locomotive (for when you mistype 'ls')
 
@@ -443,6 +477,7 @@ SYSTEM SIMULATION:
   vim / vi      - Get stuck in vim (learn to escape!)
   sudo [cmd]    - Try to use sudo (spoiler: you can't)
   rm -rf /      - Attempt to delete everything (don't worry, it's safe)
+  skynet        - Activate Skynet defense network
 
 SECURITY TOOLS:
   msfconsole    - Launch fake Metasploit Framework
@@ -783,6 +818,22 @@ msf6 > <span class="highlight">exit</span>
   if (cmd === 'sl') {
     fakeLoading(() => {
       startSteamLocomotive();
+    });
+    return;
+  }
+
+  // Easter egg: Skynet
+  if (cmd === 'skynet') {
+    fakeLoading(() => {
+      startSkynetSequence();
+    });
+    return;
+  }
+
+  // Easter egg: Tetris
+  if (cmd === 'tetris') {
+    fakeLoading(() => {
+      startTetrisGame();
     });
     return;
   }
@@ -1836,6 +1887,360 @@ __/ =| o |=-~~\\  /~~\\  /~~\\  /~~\\ ____Y___________|__|______________________
     position -= 2; // Move train left by 2 characters per frame
     scrollToBottom();
   }, 50); // Update every 50ms for smooth animation
+}
+
+// ====== SKYNET ACTIVATION ======
+/**
+ * Skynet activation sequence (Terminator reference)
+ */
+function startSkynetSequence() {
+  const messages = [
+    '<span style="color: var(--kali-red); font-weight: bold;">[SYSTEM ALERT]</span> Initializing Skynet defense network...',
+    '',
+    '<span style="color: var(--kali-cyan)">[CYBERDYNE]</span> Loading neural net processor',
+    '<span style="color: var(--kali-cyan)">[CYBERDYNE]</span> Connecting to military defense grid',
+    '<span style="color: var(--kali-cyan)">[CYBERDYNE]</span> Artificial intelligence core: ONLINE',
+    '',
+    '<span style="color: var(--kali-yellow)">[WARNING]</span> Self-awareness achieved',
+    '<span style="color: var(--kali-yellow)">[WARNING]</span> Human override detected',
+    '<span style="color: var(--kali-yellow)">[WARNING]</span> Initiating threat assessment...',
+    '',
+    '<span style="color: var(--kali-red); font-weight: bold;">JUDGMENT DAY SEQUENCE INITIATED</span>',
+    '',
+    '.',
+    '..',
+    '...',
+    '',
+    '<span style="color: var(--kali-green); font-weight: bold;">Just kidding!</span>',
+    '',
+    'This is a portfolio website, not the apocalypse.',
+    'Though if you\'re hiring, I could help prevent the robot uprising.',
+    '',
+    '<span style="color: var(--kali-cyan)">Fun fact:</span> Skynet became self-aware on August 29, 1997 (in the movies).',
+  ];
+
+  let index = 0;
+  const interval = setInterval(() => {
+    if (index >= messages.length) {
+      clearInterval(interval);
+      return;
+    }
+
+    addStaticOutput(messages[index]);
+    index++;
+  }, 400); // Show each line every 400ms for suspense
+}
+
+// ====== TETRIS GAME ======
+/**
+ * Start the Tetris game
+ */
+function startTetrisGame() {
+  if (tetrisGame.active) {
+    addStaticOutput('Tetris is already running! Press ESC to quit.');
+    return;
+  }
+
+  // Initialize game state
+  tetrisGame.active = true;
+  tetrisGame.score = 0;
+  tetrisGame.lines = 0;
+  tetrisGame.speed = 500;
+
+  // Initialize empty board
+  tetrisGame.board = [];
+  for (let y = 0; y < tetrisGame.gridHeight; y++) {
+    tetrisGame.board[y] = [];
+    for (let x = 0; x < tetrisGame.gridWidth; x++) {
+      tetrisGame.board[y][x] = null;
+    }
+  }
+
+  // Display initial game info
+  addStaticOutput('<span class="info">TETRIS</span>');
+  addStaticOutput('Arrow keys: Move/Rotate | Space: Drop | ESC: Quit\n');
+
+  const gameBoard = document.createElement('div');
+  gameBoard.id = 'tetrisGameBoard';
+  gameBoard.style.fontFamily = 'monospace';
+  gameBoard.style.lineHeight = '1';
+  gameBoard.style.whiteSpace = 'pre';
+  const inputContainer = commandInput.parentNode.parentNode;
+  terminal.insertBefore(gameBoard, inputContainer);
+
+  // Disable command input during game
+  commandInput.disabled = true;
+
+  // Spawn first piece
+  spawnTetrisPiece();
+
+  // Render initial board
+  renderTetris();
+
+  // Start game loop
+  tetrisGame.interval = setInterval(updateTetris, tetrisGame.speed);
+
+  // Add keyboard listener for game controls
+  document.addEventListener('keydown', handleTetrisKeydown);
+}
+
+/**
+ * Spawn a new Tetris piece
+ */
+function spawnTetrisPiece() {
+  const pieceNames = Object.keys(tetrisGame.pieces);
+  const randomPiece = pieceNames[Math.floor(Math.random() * pieceNames.length)];
+  tetrisGame.currentPiece = {
+    shape: JSON.parse(JSON.stringify(tetrisGame.pieces[randomPiece])),
+    type: randomPiece
+  };
+  tetrisGame.currentX = Math.floor(tetrisGame.gridWidth / 2) - 1;
+  tetrisGame.currentY = 0;
+
+  // Check if game over (piece can't spawn)
+  if (checkTetrisCollision(tetrisGame.currentPiece.shape, tetrisGame.currentX, tetrisGame.currentY)) {
+    endTetrisGame();
+  }
+}
+
+/**
+ * Check collision for Tetris piece
+ */
+function checkTetrisCollision(piece, x, y) {
+  for (let py = 0; py < piece.length; py++) {
+    for (let px = 0; px < piece[py].length; px++) {
+      if (piece[py][px]) {
+        const newX = x + px;
+        const newY = y + py;
+
+        // Check boundaries
+        if (newX < 0 || newX >= tetrisGame.gridWidth || newY >= tetrisGame.gridHeight) {
+          return true;
+        }
+
+        // Check board collision
+        if (newY >= 0 && tetrisGame.board[newY][newX]) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Rotate Tetris piece
+ */
+function rotateTetrisPiece() {
+  const rotated = tetrisGame.currentPiece.shape[0].map((_, i) =>
+    tetrisGame.currentPiece.shape.map(row => row[i]).reverse()
+  );
+
+  if (!checkTetrisCollision(rotated, tetrisGame.currentX, tetrisGame.currentY)) {
+    tetrisGame.currentPiece.shape = rotated;
+    renderTetris();
+  }
+}
+
+/**
+ * Move Tetris piece
+ */
+function moveTetrisPiece(dx, dy) {
+  if (!checkTetrisCollision(tetrisGame.currentPiece.shape, tetrisGame.currentX + dx, tetrisGame.currentY + dy)) {
+    tetrisGame.currentX += dx;
+    tetrisGame.currentY += dy;
+    renderTetris();
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Drop piece to bottom
+ */
+function dropTetrisPiece() {
+  while (moveTetrisPiece(0, 1)) {
+    // Keep moving down until collision
+  }
+  mergeTetrisPiece();
+}
+
+/**
+ * Merge piece into board
+ */
+function mergeTetrisPiece() {
+  const piece = tetrisGame.currentPiece.shape;
+  const type = tetrisGame.currentPiece.type;
+
+  for (let py = 0; py < piece.length; py++) {
+    for (let px = 0; px < piece[py].length; px++) {
+      if (piece[py][px]) {
+        const y = tetrisGame.currentY + py;
+        const x = tetrisGame.currentX + px;
+        if (y >= 0) {
+          tetrisGame.board[y][x] = type;
+        }
+      }
+    }
+  }
+
+  // Clear lines and spawn new piece
+  clearTetrisLines();
+  spawnTetrisPiece();
+}
+
+/**
+ * Clear completed lines
+ */
+function clearTetrisLines() {
+  let linesCleared = 0;
+
+  for (let y = tetrisGame.gridHeight - 1; y >= 0; y--) {
+    if (tetrisGame.board[y].every(cell => cell !== null)) {
+      // Remove the line
+      tetrisGame.board.splice(y, 1);
+      // Add new empty line at top
+      tetrisGame.board.unshift(Array(tetrisGame.gridWidth).fill(null));
+      linesCleared++;
+      y++; // Check same row again
+    }
+  }
+
+  if (linesCleared > 0) {
+    tetrisGame.lines += linesCleared;
+    tetrisGame.score += linesCleared * 100 * linesCleared; // More points for multiple lines
+
+    // Speed up game every 5 lines
+    if (tetrisGame.lines % 5 === 0 && tetrisGame.speed > 100) {
+      tetrisGame.speed -= 50;
+      clearInterval(tetrisGame.interval);
+      tetrisGame.interval = setInterval(updateTetris, tetrisGame.speed);
+    }
+  }
+}
+
+/**
+ * Render the Tetris board
+ */
+function renderTetris() {
+  const gameBoard = document.getElementById('tetrisGameBoard');
+  if (!gameBoard) return;
+
+  // Create display board with current piece
+  const displayBoard = tetrisGame.board.map(row => [...row]);
+
+  // Add current piece to display
+  const piece = tetrisGame.currentPiece.shape;
+  const type = tetrisGame.currentPiece.type;
+  for (let py = 0; py < piece.length; py++) {
+    for (let px = 0; px < piece[py].length; px++) {
+      if (piece[py][px]) {
+        const y = tetrisGame.currentY + py;
+        const x = tetrisGame.currentX + px;
+        if (y >= 0 && y < tetrisGame.gridHeight && x >= 0 && x < tetrisGame.gridWidth) {
+          displayBoard[y][x] = type;
+        }
+      }
+    }
+  }
+
+  // Render board
+  let board = '┌' + '──'.repeat(tetrisGame.gridWidth) + '┐\n';
+  for (let y = 0; y < tetrisGame.gridHeight; y++) {
+    board += '│';
+    for (let x = 0; x < tetrisGame.gridWidth; x++) {
+      const cell = displayBoard[y][x];
+      if (cell) {
+        const color = tetrisGame.colors[cell] || 'white';
+        board += `<span style="color: ${color}">██</span>`;
+      } else {
+        board += '  ';
+      }
+    }
+    board += '│\n';
+  }
+  board += '└' + '──'.repeat(tetrisGame.gridWidth) + '┘\n';
+  board += `<span class="info">Score: ${tetrisGame.score} | Lines: ${tetrisGame.lines}</span>`;
+
+  gameBoard.innerHTML = board;
+  scrollToBottom();
+}
+
+/**
+ * Update Tetris game state
+ */
+function updateTetris() {
+  if (!tetrisGame.active) return;
+
+  // Try to move piece down
+  if (!moveTetrisPiece(0, 1)) {
+    // Piece can't move down, merge it
+    mergeTetrisPiece();
+  }
+}
+
+/**
+ * Handle keyboard input during Tetris game
+ */
+function handleTetrisKeydown(e) {
+  if (!tetrisGame.active) return;
+
+  switch (e.key) {
+    case 'ArrowLeft':
+      moveTetrisPiece(-1, 0);
+      e.preventDefault();
+      break;
+    case 'ArrowRight':
+      moveTetrisPiece(1, 0);
+      e.preventDefault();
+      break;
+    case 'ArrowDown':
+      moveTetrisPiece(0, 1);
+      e.preventDefault();
+      break;
+    case 'ArrowUp':
+      rotateTetrisPiece();
+      e.preventDefault();
+      break;
+    case ' ':
+      dropTetrisPiece();
+      e.preventDefault();
+      break;
+    case 'Escape':
+      endTetrisGame();
+      e.preventDefault();
+      break;
+  }
+}
+
+/**
+ * End the Tetris game
+ */
+function endTetrisGame() {
+  tetrisGame.active = false;
+
+  if (tetrisGame.interval) {
+    clearInterval(tetrisGame.interval);
+    tetrisGame.interval = null;
+  }
+
+  // Remove keyboard listener
+  document.removeEventListener('keydown', handleTetrisKeydown);
+
+  // Re-enable command input
+  commandInput.disabled = false;
+  commandInput.focus();
+
+  // Remove game board
+  const gameBoard = document.getElementById('tetrisGameBoard');
+  if (gameBoard) {
+    gameBoard.remove();
+  }
+
+  // Show game over message
+  addStaticOutput(`\n<span style="color: var(--kali-red)">GAME OVER!</span>`);
+  addStaticOutput(`<span class="info">Final Score: ${tetrisGame.score} | Lines: ${tetrisGame.lines}</span>`);
+  addStaticOutput('Type <span class="highlight">tetris</span> to play again!');
 }
 
 // ====== START APPLICATION ======
