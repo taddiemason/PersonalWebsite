@@ -1002,9 +1002,9 @@ that always showed up. We're the part that stayed."
 
 - Elliot Alderson, Mr. Robot`;
 
-      addStaticOutput(`<div style="display: grid; grid-template-columns: auto 1fr; gap: 20px; width: 100%; overflow-x: auto;">
-  <div style="font-family: monospace; white-space: pre; font-size: 0.65em; line-height: 1; color: var(--kali-green);">${fsocietyArt}</div>
-  <div style="font-family: monospace; white-space: pre-wrap; color: var(--kali-cyan); padding: 20px; align-self: center; max-width: 600px;">${quote}</div>
+      addStaticOutput(`<div style="display: flex; gap: 40px; width: 100%; overflow-x: auto; align-items: flex-start;">
+  <div style="font-family: monospace; white-space: pre; font-size: 0.65em; line-height: 1; color: var(--kali-green); flex-shrink: 0;">${fsocietyArt}</div>
+  <div style="font-family: monospace; white-space: pre-wrap; color: var(--kali-cyan); padding-top: 20px; align-self: flex-start; min-width: 300px; max-width: 450px; flex-grow: 1;">${quote}</div>
 </div>`);
     });
     return;
