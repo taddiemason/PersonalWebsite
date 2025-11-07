@@ -402,3 +402,113 @@ a:hover {
     page-break-inside: avoid;
   }
 }
+
+/* Terminal Glitch Effect - Mr. Robot Style */
+@keyframes terminal-glitch {
+  0% {
+    opacity: 1;
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  10% {
+    opacity: 0.8;
+    transform: translate(-2px, 1px);
+    filter: hue-rotate(90deg);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(2px, -1px);
+    filter: hue-rotate(180deg);
+  }
+  30% {
+    opacity: 0.6;
+    transform: translate(-1px, 2px);
+    filter: hue-rotate(270deg);
+  }
+  40% {
+    opacity: 1;
+    transform: translate(1px, -2px);
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate(-2px, -1px);
+    filter: hue-rotate(90deg) contrast(2);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(2px, 1px);
+    filter: hue-rotate(180deg);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translate(-1px, -2px);
+    filter: hue-rotate(270deg);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(1px, 2px);
+    filter: hue-rotate(0deg);
+  }
+  90% {
+    opacity: 0.5;
+    transform: translate(-2px, 1px);
+    filter: hue-rotate(90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+}
+
+@keyframes terminal-flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes text-glitch {
+  0% {
+    text-shadow:
+      2px 0 var(--kali-red),
+      -2px 0 var(--kali-cyan);
+  }
+  25% {
+    text-shadow:
+      -2px 0 var(--kali-red),
+      2px 0 var(--kali-cyan);
+  }
+  50% {
+    text-shadow:
+      2px 2px var(--kali-red),
+      -2px -2px var(--kali-cyan);
+  }
+  75% {
+    text-shadow:
+      -2px 2px var(--kali-red),
+      2px -2px var(--kali-cyan);
+  }
+  100% {
+    text-shadow:
+      0 0 var(--kali-red),
+      0 0 var(--kali-cyan);
+  }
+}
+
+.terminal-glitching {
+  animation: terminal-glitch 0.3s ease-in-out, terminal-flicker 0.15s ease-in-out;
+}
+
+.text-glitching {
+  animation: text-glitch 0.5s ease-in-out infinite;
+}

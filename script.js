@@ -920,7 +920,9 @@ msf6 > <span class="highlight">exit</span>
   // Easter egg: Hello Friend - Mr. Robot tribute
   if (cmd === 'hello friend' || cmd === 'hellofriend') {
     fakeLoading(() => {
-      const fsocietyArt = `$ cat fsociety00.dat
+      // Trigger terminal glitch effect before showing content
+      triggerTerminalGlitch(() => {
+        const fsocietyArt = `$ cat fsociety00.dat
 
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1011,10 +1013,11 @@ stayed."
 
 — Elliot Alderson, Mr. Robot`;
 
-      addStaticOutput(`<div style="display: flex; gap: 40px; width: 100%; overflow-x: auto; align-items: flex-start;">
+        addStaticOutput(`<div style="display: flex; gap: 40px; width: 100%; overflow-x: auto; align-items: flex-start;">
   <div style="font-family: monospace; white-space: pre; font-size: 0.65em; line-height: 1; color: var(--kali-green); flex-shrink: 0;">${fsocietyArt}</div>
   <div style="font-family: monospace; white-space: pre-wrap; color: var(--kali-cyan); padding-top: 20px; align-self: flex-start; min-width: 300px; max-width: 450px; flex-grow: 1; line-height: 1.4;">${quote}</div>
 </div>`);
+      }); // End of triggerTerminalGlitch callback
     });
     return;
   }
@@ -1248,6 +1251,67 @@ function maybeShowGlitchMessage() {
       addStaticOutput(message);
     }, 300);
   }
+}
+
+/**
+ * Terminal glitch effect - Mr. Robot style
+ * Creates a visual glitch/corruption effect on the terminal
+ */
+function triggerTerminalGlitch(callback, duration = 800) {
+  const terminal = document.getElementById('terminal');
+  const output = terminal.querySelector('.output');
+
+  // Phase 1: Initial glitch with scrambled text
+  terminal.classList.add('terminal-glitching');
+
+  // Add temporary scrambled text overlay
+  const glitchTexts = [
+    '█▀▀ █▀█ █▀█ ▄▀█ █▀█ ▀█▀ █ █▀█ █▄ █',
+    '▄▄ █▀▄ █▀▄ █▀█ █▀▄ ░█░ █ █▄█ █░▀█',
+    '[SYSTEM BREACH DETECTED]',
+    'fsociety.dat corrupted...',
+    '01001000 01000101 01001100 01001100 01001111',
+    'ACCESS GRANTED: ELLIOT ALDERSON',
+    '>>> INITIALIZING DARK ARMY PROTOCOL <<<'
+  ];
+
+  const glitchOverlay = document.createElement('div');
+  glitchOverlay.className = 'text-glitching';
+  glitchOverlay.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--kali-red);
+    font-size: 1.5em;
+    font-weight: bold;
+    z-index: 9999;
+    text-align: center;
+    pointer-events: none;
+  `;
+  glitchOverlay.textContent = glitchTexts[Math.floor(Math.random() * glitchTexts.length)];
+  document.body.appendChild(glitchOverlay);
+
+  // Phase 2: Rapid text changes (200ms intervals)
+  let glitchCount = 0;
+  const glitchInterval = setInterval(() => {
+    glitchOverlay.textContent = glitchTexts[Math.floor(Math.random() * glitchTexts.length)];
+    glitchCount++;
+    if (glitchCount >= 3) {
+      clearInterval(glitchInterval);
+    }
+  }, 200);
+
+  // Phase 3: Cleanup and callback
+  setTimeout(() => {
+    terminal.classList.remove('terminal-glitching');
+    glitchOverlay.remove();
+
+    // Execute callback after glitch completes
+    if (callback) {
+      callback();
+    }
+  }, duration);
 }
 
 // ====== SNAKE GAME ======
