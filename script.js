@@ -971,25 +971,34 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                                                                 .o...P'
                                                                 \`XER0'`;
 
-      const quote = `"This whole time I thought changing the world was something
-you did. An act you performed, something you fought for, I
-don't know if that's true anymore, or if changing the world
-was just about being here. By showing up, no matter how many
-times we get told we don't belong. By staying true even when
-we're shamed into being false. By believing in ourselves,
-even when we are told we're too different. And if we all
-held onto that. If we refused to budge and fall in line. If
-we stood our ground for long enough, just maybe, the world
-can't help but change around us. Even though we'll be gone,
-its like Mr Robot said we'll always be a part of Elliot
-Alderson. And we'll be the best part, because we're the part
-that always showed up. We're the part that stayed."
+      const quote = `"This whole time I thought changing the world
+was something you did. An act you performed,
+something you fought for. I don't know if that's
+true anymore, or if changing the world was just
+about being here.
 
-- Elliot Alderson, Mr. Robot`;
+By showing up, no matter how many times we get
+told we don't belong. By staying true even when
+we're shamed into being false. By believing in
+ourselves, even when we are told we're too
+different.
+
+And if we all held onto that. If we refused to
+budge and fall in line. If we stood our ground
+for long enough, just maybe, the world can't
+help but change around us.
+
+Even though we'll be gone, it's like Mr Robot
+said we'll always be a part of Elliot Alderson.
+And we'll be the best part, because we're the
+part that always showed up. We're the part that
+stayed."
+
+— Elliot Alderson, Mr. Robot`;
 
       addStaticOutput(`<div style="display: flex; gap: 40px; width: 100%; overflow-x: auto; align-items: flex-start;">
   <div style="font-family: monospace; white-space: pre; font-size: 0.65em; line-height: 1; color: var(--kali-green); flex-shrink: 0;">${fsocietyArt}</div>
-  <div style="font-family: monospace; white-space: pre-wrap; color: var(--kali-cyan); padding-top: 20px; align-self: flex-start; min-width: 300px; max-width: 450px; flex-grow: 1;">${quote}</div>
+  <div style="font-family: monospace; white-space: pre-wrap; color: var(--kali-cyan); padding-top: 20px; line-height: 1.4; align-self: flex-start; min-width: 300px; max-width: 450px; flex-grow: 1;">${quote}</div>
 </div>`);
     });
     return;
