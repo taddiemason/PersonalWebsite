@@ -171,7 +171,10 @@ EDUCATION:
   • Erie Community College – Buffalo, NY
     Associate of Applied Science in Information Technology
     SUNY Network Support Technology Certificate
-    Expected Graduation: Summer 2025
+    
+
+Certifications:
+  • SUNY Network Support Technology Certificate
 
 PROFESSIONAL SUMMARY:
   • Actively engaged in IT industry applying studies in real-world environments
@@ -445,10 +448,10 @@ Current Education:
   • Erie Community College - Buffalo, NY
     Associate of Applied Science in Information Technology
     SUNY Network Support Technology Certificate
-    Expected Graduation: Summer 2025
+    
 
 Certifications:
-  • SUNY Network Support Technology Certificate (In Progress)
+  • SUNY Network Support Technology Certificate
 
 Continuous Learning:
   • Actively engaged in IT industry
