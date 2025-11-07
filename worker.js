@@ -1,13 +1,13 @@
 /**
  * Cloudflare Worker for Zach's Terminal Website
  * Serves static files with caching and proper content types
- * Version: 2024-11-05 - Cache-busting enabled
+ * Version: 2025-11-07 - Reduced HTML cache time for faster updates
  */
 
 // Cache configuration
 const CACHE_CONFIG = {
-  // Cache for 1 hour in browser, 1 day on CDN
-  HTML: 'public, max-age=3600, s-maxage=86400',
+  // Cache for 5 minutes in browser, 1 hour on CDN for quick content updates
+  HTML: 'public, max-age=300, s-maxage=3600, must-revalidate',
   CSS: 'public, max-age=86400, s-maxage=604800', // 1 day browser, 1 week CDN
   JS: 'public, max-age=86400, s-maxage=604800',
   IMAGES: 'public, max-age=604800, s-maxage=2592000', // 1 week browser, 30 days CDN
