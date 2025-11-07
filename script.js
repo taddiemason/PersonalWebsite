@@ -483,6 +483,11 @@ SECURITY TOOLS:
   msfconsole    - Launch fake Metasploit Framework
   metasploit    - Same as msfconsole
 
+MR. ROBOT REFERENCES:
+  fsociety      - Display the iconic fsociety hacker group message
+  fsociety.dat  - Search for the encryption file
+  whiterose     - Time is precious... how long have you been here?
+
 MATRIX DISCOVERY COMMANDS:
   follow        - Follow the white rabbit
   knock         - Knock knock joke
@@ -834,6 +839,30 @@ msf6 > <span class="highlight">exit</span>
   if (cmd === 'tetris') {
     fakeLoading(() => {
       startTetrisGame();
+    });
+    return;
+  }
+
+  // Easter egg: fsociety (Mr. Robot)
+  if (cmd === 'fsociety') {
+    fakeLoading(() => {
+      showFsociety();
+    });
+    return;
+  }
+
+  // Easter egg: fsociety.dat (Mr. Robot)
+  if (cmd === 'fsociety.dat') {
+    fakeLoading(() => {
+      showFsocietyDat();
+    });
+    return;
+  }
+
+  // Easter egg: whiterose (Mr. Robot)
+  if (cmd === 'whiterose') {
+    fakeLoading(() => {
+      showWhiterose();
     });
     return;
   }
@@ -2241,6 +2270,82 @@ function endTetrisGame() {
   addStaticOutput(`\n<span style="color: var(--kali-red)">GAME OVER!</span>`);
   addStaticOutput(`<span class="info">Final Score: ${tetrisGame.score} | Lines: ${tetrisGame.lines}</span>`);
   addStaticOutput('Type <span class="highlight">tetris</span> to play again!');
+}
+
+// ====== MR. ROBOT EASTER EGGS ======
+/**
+ * fsociety - Display fsociety hacker group ASCII art and message
+ */
+function showFsociety() {
+  const fsocietyArt = `<span style="color: var(--kali-red); font-weight: bold;">
+ ___                   _      _
+|  _|___ ___ ___ ___ |_| ___| |_ _ _
+|  _|_ -| . |  _| . || | -_|  _| | |
+|_| |___|___|___|___||_|___|_| |_  |
+                              |___|
+</span>`;
+
+  addStaticOutput(fsocietyArt);
+  addStaticOutput('');
+  addStaticOutput('<span style="color: var(--kali-green); font-weight: bold;">"Hello, friend. Welcome to fsociety."</span>');
+  addStaticOutput('');
+  addStaticOutput('<span style="color: var(--kali-cyan)">Available operations:</span>');
+  addStaticOutput('  • hack the planet');
+  addStaticOutput('  • decrypt vault');
+  addStaticOutput('  • erase debt');
+  addStaticOutput('  • free the world');
+  addStaticOutput('');
+  addStaticOutput('<span style="color: var(--kali-yellow)">Just kidding. But nice to meet a fellow Mr. Robot fan.</span>');
+  addStaticOutput('Want to discuss cybersecurity? Check out my <span class="highlight">resume</span>!');
+}
+
+/**
+ * fsociety.dat - Display encryption file reference with scanning animation
+ */
+function showFsocietyDat() {
+  addStaticOutput('<span style="color: var(--kali-cyan)">[SCANNING FOR FSOCIETY.DAT]</span>');
+  addStaticOutput('');
+  addStaticOutput('Searching E Corp servers...');
+
+  const dots = ['', '.', '..', '...', '....', '.....', '......', '.......', '........'];
+  let index = 0;
+
+  const scanInterval = setInterval(() => {
+    const lastOutput = terminal.querySelector('.output:last-of-type');
+    if (lastOutput && index < dots.length) {
+      lastOutput.textContent = dots[index];
+      index++;
+    } else {
+      clearInterval(scanInterval);
+      addStaticOutput('');
+      addStaticOutput('<span style="color: var(--kali-red); font-weight: bold;">[FILE NOT FOUND]</span>');
+      addStaticOutput('');
+      addStaticOutput('<span style="color: var(--kali-green)">That\'s probably for the best.</span>');
+      addStaticOutput('This is a portfolio site, not a ransomware distribution network.');
+      addStaticOutput('');
+      addStaticOutput('For <span style="color: var(--kali-cyan)">legitimate</span> cybersecurity work, see <span class="highlight">contact</span>.');
+    }
+  }, 200);
+}
+
+/**
+ * whiterose - Display time-themed message from Mr. Robot's Whiterose character
+ */
+function showWhiterose() {
+  // Calculate time spent on site
+  const sessionStart = performance.timing.navigationStart;
+  const now = Date.now();
+  const timeOnSite = Math.floor((now - sessionStart) / 1000);
+
+  addStaticOutput('<span style="color: var(--kali-purple); font-weight: bold;">[TIME IS PRECIOUS]</span>');
+  addStaticOutput('');
+  addStaticOutput('<span style="color: var(--kali-cyan)">"I hate to be unrealistic about time."</span>');
+  addStaticOutput('  - Whiterose');
+  addStaticOutput('');
+  addStaticOutput(`You\'ve been on this site for: <span style="color: var(--kali-yellow); font-weight: bold;">${timeOnSite} seconds</span>.`);
+  addStaticOutput('');
+  addStaticOutput('Every second counts. Check out <span class="highlight">resume</span> to save time.');
+  addStaticOutput('<span style="color: var(--kali-green)">Or don\'t. Time is an illusion anyway.</span>');
 }
 
 // ====== START APPLICATION ======
