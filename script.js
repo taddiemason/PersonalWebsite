@@ -164,9 +164,9 @@ const commands = {
 
   resume: `
 EDUCATION:
-  • Buffalo State University – Buffalo, NY
-    Bachelor of Science in Computer Information Systems (In Progress)
-    Expected Start: Fall 2025
+  • SUNY Canton – Canton, NY
+    Bachelor of Science in Cyber Security (In Progress)
+    Expected Start: Winter 2026
 
   • Erie Community College – Buffalo, NY
     Associate of Applied Science in Information Technology
@@ -438,9 +438,9 @@ General:
             content: `EDUCATION & CERTIFICATIONS:
 
 Current Education:
-  • Buffalo State University - Buffalo, NY
-    Bachelor of Science in Computer Information Systems (In Progress)
-    Expected Start: Fall 2025
+  • SUNY Canton - Canton, NY
+    Bachelor of Science in Cyber Security (In Progress)
+    Expected Start: Winter 2026
 
   • Erie Community College - Buffalo, NY
     Associate of Applied Science in Information Technology
