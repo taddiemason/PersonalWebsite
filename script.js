@@ -499,6 +499,7 @@ SECURITY TOOLS:
   metasploit    - Same as msfconsole
 
 MR. ROBOT REFERENCES:
+  hello friend  - Elliot's greeting with terminal glitch effect
   fsociety      - Display the iconic fsociety hacker group message
   fsociety.dat  - Search for the encryption file
   whiterose     - Time is precious... how long have you been here?
