@@ -158,11 +158,7 @@ const commands = {
 
   whoami: `user`,
 
-  about: `I'm currently working as a Network Administrator at Synchronet while pursuing a degree in Cyber Security at SUNY Canton University. I recently completed my AAS in Information Technology and earned a Network Support Technology Certificate from Erie Community College. Throughout my academic journey, I've been actively engaged in the IT field, applying classroom knowledge to real-world scenarios and continuing to strengthen my technical skills. Prior to transitioning into tech, I spent four years as a Field Sales Representative at DSI Systems Inc., where I developed strong leadership, decision-making, and collaboration skills. With a blend of academic training, hands-on IT experience, and a solid foundation in business, I've built a well-rounded skill set that I'm eager to contribute to future opportunities in the field.
-
----
-01001000 01101001 01100100 01100100 01100101 01101110
-(Hidden)`,
+  about: `I'm currently working as a Network Administrator at Synchronet while pursuing a degree in Cyber Security at SUNY Canton University. I recently completed my AAS in Information Technology and earned a Network Support Technology Certificate from Erie Community College. Throughout my academic journey, I've been actively engaged in the IT field, applying classroom knowledge to real-world scenarios and continuing to strengthen my technical skills. Prior to transitioning into tech, I spent four years as a Field Sales Representative at DSI Systems Inc., where I developed strong leadership, decision-making, and collaboration skills. With a blend of academic training, hands-on IT experience, and a solid foundation in business, I've built a well-rounded skill set that I'm eager to contribute to future opportunities in the field.`,
 
   contact: `You can reach me here:\n- Email: Zacharylalime@gmail.com\n- Phone: (716) 341-3678`,
 
@@ -241,10 +237,6 @@ Buffalo, NY | Oct 2015 – Nov 2018, May 2023 – Nov 2023
   • Consistently recognized for achieving high levels of customer satisfaction
   • Acted as a liaison between AT&T and third-party field sales (DSI) to ensure alignment and support
   • Awarded Certificate of Excellence (2017) for outstanding performance in customer service
-
----
-01101100 01110011 00100000 00101101 01100001
-(ls -a)
 `,
 
   clear: `Clearing the terminal...`,
@@ -256,7 +248,6 @@ let bootOutput, bootScreen, terminal, commandInput;
 // Command history for up/down arrow navigation
 let history = [];
 let historyIndex = -1;
-let commandCount = 0; // Track commands for progressive hints
 
 // ====== SNAKE GAME STATE ======
 let snakeGame = {
@@ -702,10 +693,6 @@ function processCommand(cmd) {
     return;
   }
 
-  // Increment command counter and check for progressive hints
-  commandCount++;
-  maybeShowProgressiveHint();
-
   // Easter egg: sudo commands
   if (cmd.startsWith('sudo ')) {
     const sudoMessages = [
@@ -1063,19 +1050,6 @@ function maybeShowGlitchMessage() {
     setTimeout(() => {
       addStaticOutput(message);
     }, 300);
-  }
-}
-
-/**
- * Show progressive hints based on command count
- */
-function maybeShowProgressiveHint() {
-  if (commandCount === 5) {
-    addStaticOutput('<span style="color: var(--kali-yellow)">[WHISPER]</span> Try exploring with \'ls -a\'');
-  } else if (commandCount === 10) {
-    addStaticOutput('<span style="color: var(--kali-yellow)">[HINT]</span> Hidden files start with \'.\'');
-  } else if (commandCount === 20) {
-    addStaticOutput('<span style="color: var(--kali-red)">[ORACLE]</span> cd .hidden && ls && cat .secrets.txt');
   }
 }
 
