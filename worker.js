@@ -1,13 +1,13 @@
 /**
  * Cloudflare Worker for Zach's Terminal Website
  * Serves static files with caching and proper content types
- * Version: 2025-11-07 - Reduced HTML cache time for faster updates
+ * Version: 2025-11-07 - NUCLEAR: All HTML caching disabled for debugging
  */
 
-// Cache configuration
+// Cache configuration - TEMPORARILY DISABLED FOR DEBUGGING
 const CACHE_CONFIG = {
-  // Cache for 5 minutes in browser, 1 hour on CDN for quick content updates
-  HTML: 'public, max-age=300, s-maxage=3600, must-revalidate',
+  // NUCLEAR OPTION: No caching at all - always fetch fresh
+  HTML: 'no-cache, no-store, must-revalidate, max-age=0',
   CSS: 'public, max-age=86400, s-maxage=604800', // 1 day browser, 1 week CDN
   JS: 'public, max-age=86400, s-maxage=604800',
   IMAGES: 'public, max-age=604800, s-maxage=2592000', // 1 week browser, 30 days CDN
