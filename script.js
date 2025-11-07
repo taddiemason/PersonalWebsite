@@ -379,6 +379,16 @@ Current Projects:
   • Network Infrastructure Projects
     Various network administration and security implementations
 
+  • Kali Linux MCP Server - Penetration Testing Bridge
+    A Docker-based Model Context Protocol (MCP) bridge server that provides controlled 
+    AI-assisted access to penetration testing tools on Kali Linux systems. 
+    This setup enables secure remote command execution on Kali Linux through a containerized bridge architecture.
+
+  • Gmail MCP Server
+    A Docker-based Model Context Protocol (MCP) bridge server that provides AI-assisted Gmail management through OpenWebUI. 
+    This server enables AI agents to search, read, send, and organize emails via natural language commands.
+    
+
 GitHub:
   Check out github.txt in this directory for more info!
 
@@ -392,7 +402,9 @@ GitHub: github.com/taddiemason
 
 Featured Repositories:
   • PersonalWebsite - This terminal portfolio site
-  • Various network and security projects
+  • Gmail MCP Server
+  • Kali Linux MCP Server - Penetration Testing Bridge
+  • Various network and security projectS
 
 Feel free to check out my repos and connect!
 
