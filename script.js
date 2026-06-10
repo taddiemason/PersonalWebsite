@@ -372,22 +372,62 @@ LS -A | GREP "^\\."`
             type: 'file',
             content: `MY PORTFOLIO:
 
-Current Projects:
-  • Personal Terminal Website - zacharylalime.com
-    An interactive Kali Linux-themed terminal portfolio
-
-  • Network Infrastructure Projects
-    Various network administration and security implementations
-
+Security & Pentest Tooling:
   • Kali Linux MCP Server - Penetration Testing Bridge
-    A Docker-based Model Context Protocol (MCP) bridge server that provides controlled 
-    AI-assisted access to penetration testing tools on Kali Linux systems. 
-    This setup enables secure remote command execution on Kali Linux through a containerized bridge architecture.
+    A Docker-based Model Context Protocol (MCP) server giving AI assistants
+    controlled, secure remote access to penetration-testing tools on Kali Linux.
+    github.com/taddiemason/Kali-Pentest-MCP
 
+  • JWT Attack Toolkit
+    A Python toolkit to decode, scan, and attack JSON Web Tokens - alg:none,
+    RS256->HS256 confusion, secret brute-forcing, and kid injection.
+    github.com/taddiemason/jwt-toolkit
+
+  • Vivisect - Digital Forensics Suite
+    An all-in-one DFIR platform for Debian Linux: disk imaging, file and network
+    forensics, memory analysis, and artifact extraction.
+    github.com/taddiemason/Vivisect
+
+  • M365 / Active Directory Security Audit Suite  (private)
+    A modular PowerShell framework auditing Microsoft 365, Entra ID, Exchange,
+    and Active Directory for misconfigurations, licensing waste, MFA and
+    conditional-access gaps, and excessive privileged access.
+
+  • Read-Only Network Pentest Recon Suite  (private)
+    A menu-driven PowerShell toolkit for authorized, strictly read-only recon
+    across cloud identity (M365/Entra), external attack surface (SPF/DKIM/DMARC,
+    DNS, open ports), and internal hosts (SMB signing, exposed shares).
+
+AI, MCP & Automation:
   • Gmail MCP Server
-    A Docker-based Model Context Protocol (MCP) bridge server that provides AI-assisted Gmail management through OpenWebUI. 
-    This server enables AI agents to search, read, send, and organize emails via natural language commands.
-    
+    A Docker-based MCP server letting AI agents search, read, send, and organize
+    Gmail through natural-language commands via OpenWebUI.
+    github.com/taddiemason/Gmail-MCP-Server
+
+  • ConnectWise MCP Server
+    A Docker-based MCP bridge giving AI assistants natural-language access to
+    ConnectWise Manage (tickets, companies, configs) through OpenWebUI.
+    github.com/taddiemason/Connectwise-MCP-Server
+
+  • SMS AI Chatbot
+    An SMS-based AI assistant built on Vonage for messaging and Groq for fast
+    LLM inference.
+    github.com/taddiemason/sms-chatbot
+
+  • AI Support Automation Workers  (private)
+    TypeScript Cloudflare Workers that triage and respond to tiered IT support
+    requests across chat and Telegram.
+
+  • Discord Automation Bot
+    A customizable Python Discord bot with automated roasts, target voting, an
+    in-bot economy, and a web-based admin panel.
+    github.com/taddiemason/Hate-Bot
+
+This Site:
+  • Personal Terminal Website - zacharylalime.com
+    This interactive, Kali Linux-themed terminal portfolio (vanilla JS on
+    Cloudflare Workers).
+    github.com/taddiemason/PersonalWebsite
 
 GitHub:
   Check out github.txt in this directory for more info!
@@ -401,10 +441,18 @@ Want to collaborate? Use the 'contact' command to reach out!`
 GitHub: github.com/taddiemason
 
 Featured Repositories:
-  • PersonalWebsite - This terminal portfolio site
-  • Gmail MCP Server
-  • Kali Linux MCP Server - Penetration Testing Bridge
-  • Various network and security projectS
+  • Kali-Pentest-MCP       - AI bridge to Kali pentest tools (MCP)
+  • jwt-toolkit            - JWT decode / scan / attack toolkit
+  • Vivisect               - All-in-one Linux digital forensics suite
+  • Gmail-MCP-Server       - AI-driven Gmail management over MCP
+  • Connectwise-MCP-Server - AI access to ConnectWise Manage
+  • sms-chatbot            - SMS AI assistant (Vonage + Groq)
+  • PersonalWebsite        - This terminal portfolio site
+
+  Private / professional:
+  • M365 & AD Security Audit Suite  - PowerShell M365 / Entra / AD audit framework
+  • Network Pentest Recon Suite     - Read-only PowerShell security-recon toolkit
+  • AI Support Automation Workers   - Tiered IT support automation (TypeScript)
 
 Feel free to check out my repos and connect!
 
