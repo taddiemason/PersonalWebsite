@@ -38,11 +38,107 @@ const CONTENT_TYPES = {
 // GitHub base URL for raw files
 const GITHUB_BASE = 'https://raw.githubusercontent.com/taddiemason/PersonalWebsite/main/';
 
+/**
+ * Pull the common request metadata Cloudflare gives us for free.
+ */
+function requestMeta(request) {
+  const cf = request.cf || {};
+  return {
+    referer: request.headers.get('Referer') || null,
+    userAgent: request.headers.get('User-Agent') || null,
+    country: cf.country || null,
+    city: cf.city || null,
+    ip: request.headers.get('CF-Connecting-IP') || null,
+    rayId: request.headers.get('CF-Ray') || null,
+  };
+}
+
+/**
+ * Record an HTML page load in the `visits` table (all traffic, bots included).
+ */
+async function logVisit(request, env, pathname) {
+  if (!env.DB) return; // No D1 binding configured yet — skip silently.
+  try {
+    const m = requestMeta(request);
+    await env.DB.prepare(
+      `INSERT INTO visits (path, referer, user_agent, country, city, ip, ray_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    )
+      .bind(pathname, m.referer, m.userAgent, m.country, m.city, m.ip, m.rayId)
+      .run();
+  } catch (err) {
+    console.error('logVisit failed:', err.message);
+  }
+}
+
+/**
+ * Handle the client-side beacon: a request that gets here ran JS in a real
+ * browser, so it's recorded in the `verified_humans` table.
+ */
+async function handleTrack(request, env, ctx) {
+  // Only POST is meaningful; anything else just gets a polite no-op.
+  if (request.method !== 'POST') {
+    return new Response(null, { status: 405, headers: { Allow: 'POST' } });
+  }
+
+  // Parse the (optional) JSON payload the page sends. Never trust its size.
+  let payload = {};
+  try {
+    const text = await request.text();
+    if (text && text.length <= 2048) payload = JSON.parse(text);
+  } catch {
+    payload = {};
+  }
+
+  if (env.DB) {
+    const m = requestMeta(request);
+    const path = typeof payload.path === 'string' ? payload.path.slice(0, 512) : null;
+    const referer =
+      typeof payload.referrer === 'string' && payload.referrer
+        ? payload.referrer.slice(0, 512)
+        : m.referer;
+    const screen = typeof payload.screen === 'string' ? payload.screen.slice(0, 32) : null;
+    const timezone = typeof payload.tz === 'string' ? payload.tz.slice(0, 64) : null;
+    const language = typeof payload.language === 'string' ? payload.language.slice(0, 32) : null;
+
+    ctx.waitUntil(
+      env.DB.prepare(
+        `INSERT INTO verified_humans
+           (path, referer, user_agent, country, city, ip, ray_id, screen, timezone, language)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+        .bind(
+          path,
+          referer,
+          m.userAgent,
+          m.country,
+          m.city,
+          m.ip,
+          m.rayId,
+          screen,
+          timezone,
+          language
+        )
+        .run()
+        .catch((err) => console.error('handleTrack insert failed:', err.message))
+    );
+  }
+
+  // 204 = accepted, nothing to return. Keeps the beacon lightweight.
+  return new Response(null, { status: 204 });
+}
+
 export default {
   async fetch(request, env, ctx) {
     try {
       const url = new URL(request.url);
       const pathname = url.pathname;
+
+      // Verified-human beacon: the page POSTs here after it loads in a real
+      // browser. Bots/crawlers that never run JS won't reach this.
+      if (pathname === '/track') {
+        return handleTrack(request, env, ctx);
+      }
 
       // Map the pathname to a file
       let fileName = FILE_MAP[pathname] || pathname.slice(1);
@@ -107,6 +203,13 @@ export default {
 
       // Caching disabled - not storing in cache
       // ctx.waitUntil(cache.put(request, modifiedResponse.clone()));
+
+      // Log one row per HTML page load (every hit the Worker sees, bots
+      // included). Asset requests (css/js/json) are skipped to avoid
+      // counting a single page view many times. Non-blocking.
+      if (extension === '.html') {
+        ctx.waitUntil(logVisit(request, env, pathname));
+      }
 
       return modifiedResponse;
     } catch (error) {

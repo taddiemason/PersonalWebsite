@@ -2739,6 +2739,36 @@ function showPing() {
   });
 }
 
+// ====== VERIFIED-HUMAN BEACON ======
+// Fires once per page load. Because this only runs in a real browser that
+// executes JS, the Worker logs it to the `verified_humans` table — bots and
+// crawlers that just fetch the HTML never get here.
+function sendVisitBeacon() {
+  try {
+    const payload = JSON.stringify({
+      path: location.pathname,
+      referrer: document.referrer || null,
+      screen: `${window.screen.width}x${window.screen.height}`,
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+      language: navigator.language || null,
+    });
+
+    // sendBeacon survives page unload and doesn't block; fall back to fetch.
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/track', new Blob([payload], { type: 'application/json' }));
+    } else {
+      fetch('/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+        keepalive: true,
+      }).catch(() => {});
+    }
+  } catch (e) {
+    // Tracking must never break the page.
+  }
+}
+
 // ====== START APPLICATION ======
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
@@ -2746,3 +2776,5 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+sendVisitBeacon();

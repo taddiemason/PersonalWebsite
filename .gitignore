@@ -1,0 +1,4 @@
+# Wrangler local state / cache (contains account info, never commit)
+.wrangler/
+# Node
+node_modules/

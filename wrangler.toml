@@ -1,3 +1,11 @@
 name = "personalwebsite"
 main = "worker.js"
 compatibility_date = "2025-04-30"
+
+# D1 database for visit analytics.
+# Create it once with:  wrangler d1 create personalwebsite-analytics
+# then paste the printed database_id below.
+[[d1_databases]]
+binding = "DB"
+database_name = "personalwebsite-analytics"
+database_id = "cc192a3b-89b3-4398-b357-86155edc5e67"
