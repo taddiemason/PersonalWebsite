@@ -153,8 +153,19 @@ const commands = {
   about    - Display information about Zach
   contact  - Show contact information
   resume   - View professional experience and education
+  projects - Browse portfolio projects
+  github   - View GitHub profile and repositories
   clear    - Clear the terminal screen
-  whoami   - Display current user`,
+  whoami   - Display current user
+
+File navigation:
+  ls       - List files in current directory
+  ls -a    - Show hidden files too
+  cd <dir> - Change directory
+  pwd      - Print current path
+  cat <f>  - Read a file
+
+Explore further... some commands are only discovered by trying.`,
 
   whoami: `user`,
 
@@ -1117,6 +1128,22 @@ stayed."
     return;
   }
 
+  if (cmd === 'projects') {
+    fakeLoading(() => {
+      typeOutput(fileSystem['/home/user/projects'].contents['portfolio.txt'].content);
+      maybeShowGlitchMessage();
+    });
+    return;
+  }
+
+  if (cmd === 'github') {
+    fakeLoading(() => {
+      typeOutput(fileSystem['/home/user/projects'].contents['github.txt'].content);
+      maybeShowGlitchMessage();
+    });
+    return;
+  }
+
   if (cmd === 'clear') {
     fakeLoading(() => {
       clearTerminal();
@@ -1412,6 +1439,8 @@ function startSnakeGame() {
 
   // Display initial game board
   addStaticOutput('<span class="info">SNAKE GAME</span>');
+  const hiScore = (() => { try { return localStorage.getItem('snake_highscore') || '0'; } catch(e) { return '0'; } })();
+  addStaticOutput(`<span class="info">High score: ${hiScore}</span>`);
   addStaticOutput('Use arrow keys to move. Press ESC to quit.\n');
 
   const gameBoard = document.createElement('div');
@@ -1617,6 +1646,13 @@ function endSnakeGame(userQuit) {
   } else {
     addStaticOutput(`\n<span style="color: var(--kali-red)">GAME OVER!</span>`);
     addStaticOutput(`<span class="info">Final score: ${snakeGame.score}</span>`);
+    try {
+      const prev = parseInt(localStorage.getItem('snake_highscore') || '0', 10);
+      if (snakeGame.score > prev) {
+        localStorage.setItem('snake_highscore', snakeGame.score);
+        addStaticOutput('<span style="color: var(--kali-yellow)">New high score!</span>');
+      }
+    } catch(e) { /* localStorage unavailable */ }
     addStaticOutput('Type <span class="highlight">snake</span> to play again!');
   }
 }
