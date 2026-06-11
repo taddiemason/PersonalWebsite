@@ -17,6 +17,8 @@ const FILE_MAP = {
   '/index.html': 'index.html',
   '/styles.css': 'styles.css',
   '/script.js': 'script.js',
+  '/data.js': 'data.js',
+  '/manifest.json': 'manifest.json',
 };
 
 // Content type mappings
@@ -93,6 +95,8 @@ export default {
         'X-Content-Type-Options': 'nosniff',
         'X-Frame-Options': 'SAMEORIGIN',
         'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'",
       });
 
       const modifiedResponse = new Response(response.body, {

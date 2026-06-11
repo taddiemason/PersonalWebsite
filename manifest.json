@@ -1,0 +1,16 @@
+{
+  "name": "Zachary Lalime — Terminal Portfolio",
+  "short_name": "ZachBox",
+  "description": "Interactive Kali Linux-themed terminal portfolio for Zachary Lalime, Network Administrator & IT Specialist",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1d29",
+  "theme_color": "#1e1e2e",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

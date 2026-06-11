@@ -26,6 +26,9 @@
   <meta property="twitter:description" content="Network Administrator and IT Specialist passionate about building secure, scalable systems.">
   <meta property="twitter:image" content="https://zachlalime.com/preview.png">
 
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -48,14 +51,34 @@
     "url": "https://zachlalime.com",
     "jobTitle": "Network Administrator and IT Specialist",
     "description": "Network Administrator and IT Specialist passionate about building secure, scalable systems",
-    "knowsAbout": ["Network Administration", "IT", "Cyber Security", "Network Security", "System Administration", "Kali Linux"],
+    "knowsAbout": ["Network Administration", "IT", "Cyber Security", "Network Security", "System Administration", "Kali Linux", "Cloud Computing", "Azure AD", "Active Directory", "PowerShell"],
     "sameAs": [
-      "https://zachlalime.com"
+      "https://zachlalime.com",
+      "https://github.com/taddiemason"
     ]
   }
   </script>
 </head>
 <body>
+  <noscript>
+    <style>
+      .noscript-fallback { font-family: 'Courier New', monospace; background: #1a1d29; color: #10b981; padding: 40px; max-width: 600px; margin: 60px auto; line-height: 1.7; }
+      .noscript-fallback h1 { color: #00d9ff; margin-bottom: 4px; }
+      .noscript-fallback a { color: #7c3aed; }
+      .noscript-fallback p { margin: 6px 0; }
+    </style>
+    <div class="noscript-fallback">
+      <h1>Zachary Lalime</h1>
+      <p>Network Administrator &amp; IT Specialist</p>
+      <br>
+      <p>Email: <a href="mailto:Zacharylalime@gmail.com">Zacharylalime@gmail.com</a></p>
+      <p>Phone: (716) 341-3678</p>
+      <p>GitHub: <a href="https://github.com/taddiemason">github.com/taddiemason</a></p>
+      <br>
+      <p><em>This site requires JavaScript for the interactive terminal experience.</em></p>
+    </div>
+  </noscript>
+
   <!-- Boot Screen Section -->
   <section id="bootScreen" role="region" aria-label="System boot sequence" aria-live="polite">
     <pre id="bootOutput" aria-label="Boot sequence output"></pre>
@@ -108,7 +131,9 @@
     </div>
   </main>
 
+  <!-- Portfolio data (must load before script.js) -->
+  <script src="data.js?v=20260610"></script>
   <!-- Main Script -->
-  <script src="script.js?v=20251106-mr-robot"></script>
+  <script src="script.js?v=20260610"></script>
 </body>
 </html>
