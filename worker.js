@@ -1,13 +1,11 @@
 /**
  * Cloudflare Worker for Zach's Terminal Website
  * Serves static files with caching and proper content types
- * Version: 2025-11-07 - NUCLEAR: All HTML caching disabled for debugging
  */
 
-// Cache configuration - TEMPORARILY DISABLED FOR DEBUGGING
+// Cache configuration
 const CACHE_CONFIG = {
-  // NUCLEAR OPTION: No caching at all - always fetch fresh
-  HTML: 'no-cache, no-store, must-revalidate, max-age=0',
+  HTML: 'public, max-age=3600, s-maxage=86400',
   CSS: 'public, max-age=86400, s-maxage=604800', // 1 day browser, 1 week CDN
   JS: 'public, max-age=86400, s-maxage=604800',
   IMAGES: 'public, max-age=604800, s-maxage=2592000', // 1 week browser, 30 days CDN
@@ -64,17 +62,7 @@ export default {
       let response = await fetch(githubUrl);
 
       if (!response.ok) {
-        // If file not found and it's root, try fetching Core.html as fallback
-        if (response.status === 404 && (pathname === '/' || pathname === '/index.html')) {
-          const fallbackUrl = GITHUB_BASE + 'Core.html';
-          response = await fetch(fallbackUrl);
-
-          if (!response.ok) {
-            return new Response('Website content not found', { status: 404 });
-          }
-        } else {
-          return new Response(`File not found: ${fileName}`, { status: 404 });
-        }
+        return new Response(`File not found: ${fileName}`, { status: 404 });
       }
 
       // Determine content type

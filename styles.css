@@ -550,4 +550,7 @@ a:hover {
   .quick-cmd-btn:active {
     background: rgba(0, 217, 255, 0.15);
   }
+
+  .quick-cmd-btn:hover { background: rgba(0, 217, 255, 0.1); }
+  .quick-cmd-btn:focus-visible { outline: 1px solid var(--kali-cyan); outline-offset: 2px; }
 }
