@@ -512,3 +512,42 @@ a:hover {
 .text-glitching {
   animation: text-glitch 0.5s ease-in-out infinite;
 }
+
+/* Mobile quick-command pill buttons */
+.quick-commands {
+  display: none;
+}
+
+@media (max-width: 575px) {
+  .quick-commands {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 8px 0 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .quick-commands::-webkit-scrollbar {
+    display: none;
+  }
+
+  .quick-cmd-btn {
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--kali-cyan);
+    color: var(--kali-cyan);
+    font-family: var(--font-family);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s;
+  }
+
+  .quick-cmd-btn:active {
+    background: rgba(0, 217, 255, 0.15);
+  }
+}

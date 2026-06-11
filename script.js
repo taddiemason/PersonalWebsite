@@ -618,6 +618,15 @@ function init() {
     return;
   }
 
+  // Restore command history from previous session
+  try {
+    const saved = localStorage.getItem('terminal_history');
+    if (saved) {
+      history = JSON.parse(saved);
+      historyIndex = history.length;
+    }
+  } catch (e) { /* localStorage unavailable */ }
+
   // Start boot sequence
   startBootSequence();
 
@@ -635,7 +644,7 @@ function startBootSequence() {
 
   const bootInterval = setInterval(() => {
     if (lineIndex < bootLines.length) {
-      bootOutput.innerHTML += bootLines[lineIndex] + '\n';
+      bootOutput.insertAdjacentHTML('beforeend', bootLines[lineIndex] + '\n');
       bootScreen.scrollTop = bootScreen.scrollHeight;
       lineIndex++;
     } else {
@@ -683,6 +692,15 @@ function setupEventListeners() {
     resizeTimer = setTimeout(() => {
       scrollToBottom();
     }, 250);
+  });
+
+  // Mobile quick-command buttons
+  document.querySelectorAll('.quick-cmd-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      commandInput.value = btn.dataset.cmd;
+      handleEnterKey();
+    });
   });
 
   // Better mobile keyboard handling
@@ -744,6 +762,7 @@ function handleEnterKey() {
     history.push(input);
     historyIndex = history.length;
     commandInput.value = '';
+    try { localStorage.setItem('terminal_history', JSON.stringify(history.slice(-100))); } catch (e) { /* ignore */ }
   }
 }
 
@@ -1958,6 +1977,8 @@ function startMatrixEffect() {
   // Create canvas for Matrix rain
   const canvas = document.createElement('canvas');
   canvas.id = 'matrixCanvas';
+  canvas.setAttribute('aria-label', 'Matrix rain animation — press any key to exit');
+  canvas.setAttribute('role', 'img');
   canvas.style.position = 'fixed';
   canvas.style.top = '0';
   canvas.style.left = '0';
@@ -2221,6 +2242,8 @@ function startTetrisGame() {
 
   const gameBoard = document.createElement('div');
   gameBoard.id = 'tetrisGameBoard';
+  gameBoard.setAttribute('role', 'img');
+  gameBoard.setAttribute('aria-label', 'Tetris game board');
   gameBoard.style.fontFamily = 'monospace';
   gameBoard.style.lineHeight = '1';
   gameBoard.style.whiteSpace = 'pre';
@@ -2563,7 +2586,7 @@ function showFsocietyDat() {
  */
 function showWhiterose() {
   // Calculate time spent on site
-  const sessionStart = performance.timing.navigationStart;
+  const sessionStart = performance.timeOrigin;
   const now = Date.now();
   const timeOnSite = Math.floor((now - sessionStart) / 1000);
 
