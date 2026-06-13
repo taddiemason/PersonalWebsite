@@ -5,7 +5,9 @@
 
 // Cache configuration
 const CACHE_CONFIG = {
-  HTML: 'public, max-age=3600, s-maxage=86400',
+  // Short edge TTL for HTML so GitHub pushes still show up quickly (within ~5 min)
+  // while sparing raw.githubusercontent.com from a hit on every single request.
+  HTML: 'public, max-age=300, s-maxage=300',
   CSS: 'public, max-age=86400, s-maxage=604800', // 1 day browser, 1 week CDN
   JS: 'public, max-age=86400, s-maxage=604800',
   IMAGES: 'public, max-age=604800, s-maxage=2592000', // 1 week browser, 30 days CDN
@@ -148,18 +150,39 @@ export default {
         return new Response('Invalid path', { status: 400 });
       }
 
-      // Build GitHub URL (strip query params since GitHub doesn't use them)
-      // But keep them in cache key for proper versioning
+      // Build GitHub URL (strip query params since GitHub doesn't use them).
+      // The cache key keeps the full request (incl. ?v=... query), so bumping a
+      // file's version string busts its cached copy cleanly.
       const githubUrl = GITHUB_BASE + fileName;
 
-      // CACHING COMPLETELY DISABLED - Always fetch fresh from GitHub
-      // const cache = caches.default;
-      // let response = await cache.match(request);
+      // Serve from Cloudflare's edge cache when we have it. This is the whole
+      // point: without it we hit raw.githubusercontent.com on EVERY request,
+      // and GitHub rate-limits us — which made assets (script.js) 404 and the
+      // page hang. A cache hit never touches GitHub.
+      const cache = caches.default;
+      const cachedResponse = await cache.match(request);
+      if (cachedResponse) {
+        // Still log HTML page views even when served from cache, so the
+        // `visits` table doesn't undercount. Non-blocking; never hits GitHub.
+        if (fileName.endsWith('.html')) {
+          ctx.waitUntil(logVisit(request, env, pathname));
+        }
+        const hitHeaders = new Headers(cachedResponse.headers);
+        hitHeaders.set('X-Cache', 'HIT');
+        return new Response(cachedResponse.body, {
+          status: cachedResponse.status,
+          statusText: cachedResponse.statusText,
+          headers: hitHeaders,
+        });
+      }
 
-      // Fetch from GitHub (bypassing cache entirely)
+      // Cache miss — fetch fresh from GitHub.
       let response = await fetch(githubUrl);
 
       if (!response.ok) {
+        // IMPORTANT: never cache a failure. If GitHub is rate-limiting us right
+        // now, we return 404 for this one request but leave the cache clean so
+        // the next request can succeed and get cached.
         return new Response(`File not found: ${fileName}`, { status: 404 });
       }
 
@@ -201,8 +224,9 @@ export default {
         headers: headers,
       });
 
-      // Caching disabled - not storing in cache
-      // ctx.waitUntil(cache.put(request, modifiedResponse.clone()));
+      // Store this good response at the edge so subsequent requests skip GitHub
+      // entirely until the Cache-Control TTL (or a ?v= bump) expires it.
+      ctx.waitUntil(cache.put(request, modifiedResponse.clone()));
 
       // Log one row per HTML page load (every hit the Worker sees, bots
       // included). Asset requests (css/js/json) are skipped to avoid
