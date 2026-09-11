@@ -673,6 +673,26 @@ Try all the easter egg commands - they're fun!`
   }
 };
 
+/**
+ * Register every nested directory under its absolute path.
+ *
+ * fileSystem is authored as a single '/home/user' tree, but commands like
+ * `projects` and `github` look paths up directly (fileSystem['/home/user/projects']).
+ * Without this, those lookups are undefined and the command throws, so indexing
+ * the tree once at load keeps both access styles working.
+ */
+(function indexDirectories(node, path) {
+  if (!node || node.type !== 'directory' || !node.contents) return;
+
+  for (const [name, child] of Object.entries(node.contents)) {
+    if (child.type === 'directory') {
+      const childPath = path === '/' ? `/${name}` : `${path}/${name}`;
+      fileSystem[childPath] = child;
+      indexDirectories(child, childPath);
+    }
+  }
+})(fileSystem['/home/user'], '/home/user');
+
 // ====== INITIALIZATION ======
 /**
  * Initialize the terminal application
