@@ -194,6 +194,7 @@ const commands = {
   contact  - Show contact information
   resume   - View professional experience and education
   projects - Browse portfolio projects
+  homelab  - Tour my homelab infrastructure
   github   - View GitHub profile and repositories
   clear    - Clear the terminal screen
   whoami   - Display current user
@@ -219,6 +220,7 @@ Type 'snake' or 'tetris' for games. Explore for hidden commands...`,
   theme: 'theme',
 
   resume: PORTFOLIO.resume,
+  homelab: PORTFOLIO.homelab,
 
   clear: `Clearing the terminal...`,
 };
@@ -387,6 +389,11 @@ AI, MCP & Automation:
     ConnectWise Manage (tickets, companies, configs) through OpenWebUI.
     github.com/taddiemason/Connectwise-MCP-Server
 
+  • Microsoft Outlook MCP Server
+    A TypeScript MCP server for reading, searching, and managing Outlook mail
+    and calendar through the Microsoft Graph API.
+    github.com/taddiemason/Microsoft-Outlook-MCP
+
   • SMS AI Chatbot
     An SMS-based AI assistant built on Vonage for messaging and Groq for fast
     LLM inference.
@@ -400,6 +407,26 @@ AI, MCP & Automation:
     A customizable Python Discord bot with automated roasts, target voting, an
     in-bot economy, and a web-based admin panel.
     github.com/taddiemason/Hate-Bot
+
+Infrastructure & Automation:
+  • Infrastructure Audit Automation Toolkit  (private)
+    A suite of read-only PowerShell scripts that automate an entire MSP
+    environment review by calling vendor APIs directly: Active Directory
+    hygiene, Microsoft 365 and Entra security and licensing, backup coverage
+    and retention, VMware and Proxmox hypervisor health, HPE iLO server
+    hardware and RAID health, Sophos firewall firmware and licensing, UniFi
+    wireless, and SNMP managed-switch inventory. Replaced a manual
+    portal-by-portal process with repeatable CSV and report exports.
+
+  • Backup Authorization Tooling  (private)
+    Generates client-facing backup authorization documents straight from the
+    backup platform API, removing a recurring manual reporting step.
+
+  • Homelab — "DeadPresidents"
+    A two-node Proxmox cluster, self-managed network edge with IDS, Samba
+    Active Directory, and a full monitoring and alerting stack. Run like a
+    small production environment, with runbooks and incident postmortems.
+    Type 'homelab' for the full tour.
 
 This Site:
   • Personal Terminal Website - zacharylalime.com
@@ -419,17 +446,23 @@ Want to collaborate? Use the 'contact' command to reach out!`
 GitHub: github.com/taddiemason
 
 Featured Repositories:
-  • Kali-Pentest-MCP       - AI bridge to Kali pentest tools (MCP)
-  • jwt-toolkit            - JWT decode / scan / attack toolkit
   • Vivisect               - All-in-one Linux digital forensics suite
-  • Gmail-MCP-Server       - AI-driven Gmail management over MCP
+  • jwt-toolkit            - JWT decode / scan / attack toolkit
+  • Kali-Pentest-MCP       - AI bridge to Kali pentest tools (MCP)
   • Connectwise-MCP-Server - AI access to ConnectWise Manage
+  • Gmail-MCP-Server       - AI-driven Gmail management over MCP
+  • Microsoft-Outlook-MCP  - Outlook mail & calendar over Microsoft Graph
+  • Exchange-shared-mailbox-check - PowerShell shared-mailbox reporting
   • sms-chatbot            - SMS AI assistant (Vonage + Groq)
   • PersonalWebsite        - This terminal portfolio site
 
   Private / professional:
-  • M365 & AD Security Audit Suite  - PowerShell M365 / Entra / AD audit framework
+  • Infrastructure Audit Toolkit    - Read-only PowerShell + REST API audits across
+                                      AD, M365/Entra, backup, hypervisor, iLO,
+                                      firewall, wireless, and SNMP switching
   • Network Pentest Recon Suite     - Read-only PowerShell security-recon toolkit
+  • M365 & AD Security Audit Suite  - PowerShell M365 / Entra / AD audit framework
+  • Backup Authorization Tooling    - API-driven client backup documentation
   • AI Support Automation Workers   - Tiered IT support automation (TypeScript)
 
 Feel free to check out my repos and connect!
@@ -445,34 +478,52 @@ Use 'contact' command to reach me directly.`
             type: 'file',
             content: `TECHNICAL SKILLS:
 
-Hardware & Infrastructure:
-  • Hardware Installation & Configuration
-  • Server Maintenance & Troubleshooting
-  • Network Infrastructure (LAN/WAN)
+Scripting & Automation:
+  • PowerShell (primary), Python, TypeScript/JavaScript, Bash
+  • REST API integration — Microsoft Graph, Sophos Central, UniFi Site Manager,
+    HPE iLO Redfish, N-able, ConnectWise
+  • SNMPv2c polling, scheduled jobs and cron
+  • Git / GitHub, CI/CD at the edge
 
-Cloud & Systems:
-  • Azure AD
-  • Office 365
-  • Active Directory (GPOs, permissions)
-  • DHCP, DNS
+Systems & Identity:
+  • Windows Server, Active Directory (GPOs, permissions, delegation)
+  • Microsoft 365, Microsoft Entra ID, Exchange Online, Microsoft Graph
+  • Samba AD, SSSD, Kerberos
+  • DNS, DHCP, split-horizon resolution
+
+Virtualization & Containers:
+  • VMware vSphere / ESXi (PowerCLI), Proxmox VE clustering, Hyper-V
+  • LXC, Docker and Docker Compose
+  • Kubernetes and Ansible (working knowledge)
+
+Networking:
+  • Routers, switches, firewalls, wireless access points
+  • Sophos, OPNsense, Ubiquiti (EdgeRouter, UniFi, USG/UXG), NETGEAR
+  • VLANs, NAT and port forwarding, site-to-site and remote-access VPN
+  • Tailscale, WireGuard, OpenVPN
+  • Network monitoring and performance troubleshooting
 
 Security:
-  • Network Security
-  • VPN Configuration
-  • Firewalls, Routers, Switches
-  • Security Audits
+  • Identity and access auditing, privileged-group review
+  • MFA and conditional access review, application consent review
+  • Email security posture — SPF, DKIM, DMARC
+  • External attack-surface recon, SMB share and port exposure review
+  • Suricata and CrowdSec IDS, ClamAV, patch management
+  • Nmap, Burp Suite, Netcat, tcpdump, TShark, NetExec, OWASP Amass, Gitleaks
+  • SOC 2 / ISO 27001 / NIST framework awareness
 
-Software & Tools:
-  • System Performance Optimization
-  • Software Configuration & Updates
-  • Data Recovery & Backups
-  • Monitoring Tools
+Storage & Backup:
+  • Backup coverage, retention, and recovery-point objective validation
+  • N-able Cove backup, Microsoft 365 workload backup
+  • ZFS, NFS, SMB, OpenMediaVault
+  • Data recovery and restore-readiness documentation
 
-General:
-  • Problem Solving
-  • Customer Service
-  • Network Troubleshooting
-  • Technical Documentation`
+Monitoring & Operations:
+  • netdata, Monit, Uptime Kuma, SNMP polling, email/webhook alert routing
+  • Structured environment audits and risk-rated findings
+  • Runbooks, SOP authorship, incident postmortems
+  • Ticketing, escalation, vendor coordination, procurement
+  • Technical documentation and customer service`
           },
           'certifications.txt': {
             type: 'file',
@@ -481,20 +532,64 @@ General:
 Current Education:
   • SUNY Canton - Canton, NY
     Bachelor of Science in Cyber Security (In Progress)
-    Expected Start: Winter 2026
+    Expected Graduation: June 2027
+    Coursework: Information Security, Cryptography, Network Management
 
   • Erie Community College - Buffalo, NY
-    Associate of Applied Science in Information Technology
+    Associate of Applied Science in Information Technology (August 2025)
     SUNY Network Support Technology Certificate
-    
 
 Certifications:
   • SUNY Network Support Technology Certificate
 
 Continuous Learning:
-  • Actively engaged in IT industry
-  • Real-world experience alongside studies
-  • Pursuing Cyber Security specialization at SUNY Canton`
+  • Cisco Networking Essentials / CCNA self-study
+  • Linux command line and Bash scripting
+  • Docker, Kubernetes, Ansible, AWS, Azure DevOps
+  • Application security — OAuth 2.0, JWT, session security, CSP and HSTS
+  • All of it kept as a written, cross-referenced technical knowledge base
+    rather than a list of finished courses`
+          },
+          'homelab.txt': {
+            type: 'file',
+            content: `HOMELAB — "DeadPresidents"
+
+A self-built lab run like a small production environment.
+
+Virtualization:
+  • Two-node Proxmox VE cluster, ~20 LXC and QEMU guests
+  • Shared NFS storage on an OpenMediaVault NAS backed by ZFS
+  • Unprivileged containers, per-service isolation, dedicated service users
+  • GPU passthrough for a dedicated media/AI workload VM
+
+Network edge:
+  • OPNsense, then a Ubiquiti EdgeRouter, as the perimeter firewall
+  • Suricata and CrowdSec intrusion detection (alert-only)
+  • Unbound + dnsmasq split-horizon DNS including an AD-authoritative zone
+  • Tailscale subnet router and exit node for VPN-first remote access
+  • VPN split tunnel with a fail-closed kill switch for a single host
+  • Minimized WAN exposure with documented port-forwards
+
+Identity and storage:
+  • Linux NAS joined to a Samba AD domain over SSSD and Kerberos
+  • Per-user private SMB home drives with role-based access control
+  • ZFS pool management, snapshots, and a documented migration runbook
+
+Security and monitoring:
+  • Scheduled ClamAV scanning with quarantine and email alerting (EICAR tested)
+  • netdata and Monit health checks alerting via Microsoft 365 direct send
+  • Uptime Kuma for HTTP/TCP/ping checks and SSL expiry warnings
+  • WAN IP change watchdog and webhook notification routing
+  • Self-hosted RustDesk (hbbs/hbbr) with ED25519 key management
+
+Incidents I learned from:
+  • Suspended ZFS pool — both SATA drives dropped together while NFS kept
+    serving cached filenames, so media could be listed but not read
+  • Full-LAN outage — a VPN full-tunnel route hijack blackholed the network,
+    traced to an EdgeOS firewall chain desync needing a reboot to clear
+
+Every build has a written guide and every outage has a postmortem.
+Type 'homelab' for the full tour.`
           }
         }
       },

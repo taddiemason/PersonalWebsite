@@ -17,7 +17,20 @@ An interactive terminal-style personal website featuring a realistic Linux boot 
 - `about` - Learn about my background and experience
 - `contact` - Get contact information
 - `resume` - View detailed work history and education
+- `projects` - Browse portfolio projects
+- `homelab` - Tour my homelab infrastructure
+- `github` - View GitHub profile and repositories
+- `whoami` - Display current user
+- `neofetch` - Display system info
+- `ping` - Ping zachlalime.com
+- `theme` - Switch color theme (kali / matrix / redteam)
 - `clear` - Clear the terminal screen
+
+File navigation: `ls`, `ls -a`, `cd <dir>`, `pwd`, `cat <file>`.
+Games: `snake`, `tetris`. Plus a few hidden commands worth finding.
+
+Portfolio content (`about`, `contact`, `resume`, `homelab`) lives in `data.js`.
+The simulated filesystem under `projects/` and `documents/` lives in `script.js`.
 
 ## Project Structure
 
@@ -25,8 +38,10 @@ An interactive terminal-style personal website featuring a realistic Linux boot 
 PersonalWebsite/
 ├── index.html          # Main HTML structure with semantic markup
 ├── styles.css          # Stylesheet with CSS variables and responsive design
-├── script.js           # Terminal logic, boot sequence, and command processing
-├── worker.js           # Cloudflare Worker with caching and routing
+├── data.js             # Portfolio content — edit here to update about/resume/homelab
+├── script.js           # Terminal logic, boot sequence, filesystem, command processing
+├── worker.js           # Cloudflare Worker with caching, routing, and visit tracking
+├── schema.sql          # D1 schema for visit analytics
 ├── wrangler.toml       # Cloudflare Workers configuration
 └── README.md           # This file
 ```
